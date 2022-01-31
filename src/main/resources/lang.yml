@@ -1,0 +1,86 @@
+invalid-command:
+  - '&cInvalid command, try /%command% help for usage!'
+
+no-permission:
+  - '&cYou do not have permission to do this!'
+
+requires-player:
+  - '&cYou must be a player to do this!'
+
+command-usage:
+  - '&cUsage: /%command%'
+
+faction-command:
+  # /faction create <name>
+  create:
+    already-in-faction:
+      - '&cYou are already in a faction!'
+      - '&fYou must leave your current faction'
+      - '&fbefore making a new one'
+
+    name-cannot-contain-spaces:
+      - '&cFaction name cannot contain spaces!'
+
+    invalid-id:
+      - '&cFaction name is invalid!'
+      - '&fName must contain A-Z, 0-9 only'
+      - '&fand be between 3-10 letters'
+
+    name-taken:
+      - '&f%name% &cis already in use by another faction!'
+
+    faction-created:
+      - '&aSuccessfully created faction named &f%name%'
+
+  # /faction leave
+  leave:
+    not-in-faction:
+      - '&cYou are not in a faction!'
+
+    player-is-leader:
+      - '&cYou cannot leave your faction!'
+      - '&fYou are the faction leader, please'
+      - '&fpromote another player first'
+
+    left-player:
+      - '&aYou left faction &f%name%'
+
+    left-member:
+      - '&7%player% has left your faction!'
+
+admin-command:
+  # /admin create <name> [-p]
+  create:
+    usage:
+      - '&cCommand Usage: /admin create <name> [-p]'
+      - '&fFlags: -p to create player faction'
+
+    invalid-id:
+      - '&cFaction name is invalid!'
+      - '&fName must contain A-Z, 0-9 only'
+      - '&fand be between 3-10 letters'
+
+    name-taken:
+      - '&f%name% &cis already in use by another %type% faction!'
+
+    faction-created:
+      - '&aSuccessfully created %type% faction named &f%name%'
+
+  # /admin claim
+  claim:
+    no-temp-faction:
+      - '&cYou are not currently a temporary member of a faction!'
+      - '&fIn order to use this, you must be a temp faction member'
+
+    chunk-already-claimed:
+      - '&cThis chunk is already claimed by &f%faction%'
+
+    chunk-claimed:
+      - '&aClaimed %type% chunk for faction %faction%'
+
+  temp-join:
+    unknown-faction:
+      - '&CCould not find faction &f%faction%'
+
+    joined:
+      - '&7You have temporarily joined %faction.type% faction %faction%'

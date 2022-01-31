@@ -1,0 +1,21 @@
+name: UHCF
+version: '${project.version}'
+main: me.michqql.uhcf.UHCFPlugin
+api-version: 1.18
+
+commands:
+  faction:
+    aliases:
+      - factions
+      - fac
+      - f
+      - guilds
+      - guild
+      - g
+      - clans
+      - clan
+      - c
+
+  admin:
+    aliases:
+      - x
