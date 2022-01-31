@@ -23,7 +23,7 @@ public class FactionCommandManager extends CommandManager {
     protected void registerSubCommands() {
         subCommands.addAll(List.of(
                 new CreateFactionSubCommand(bukkitPlugin, messageHandler, factionsManager),
-                new InvitePlayerSubCommand(bukkitPlugin, messageHandler, factionsManager)
+                new LeaveSubCommand(bukkitPlugin, messageHandler, factionsManager)
         ));
     }
 

@@ -51,7 +51,7 @@ public class ClaimLandSubCommand extends SubCommand {
         Chunk location = player.getLocation().getChunk();
 
         // Check whether land is claimed or not
-        Claim claim = claimsManager.getClaimFromChunk(location);
+        Claim claim = claimsManager.getClaimByChunk(location);
         if(claim != null) {
             String displayName = "unknown";
             if(claim instanceof AdminClaim ac)

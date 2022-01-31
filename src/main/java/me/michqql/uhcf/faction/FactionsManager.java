@@ -31,7 +31,7 @@ public final class FactionsManager {
 
         String regexPattern = f.getString("faction-id-regex-pattern");
         if(regexPattern == null) {
-            Bukkit.getLogger().warning("[Factions] factions_config.yml - invalid regex pattern 'faction-id-regex-pattern'");
+            Bukkit.getLogger().warning("[factions_config.yml] No faction id regex pattern given at 'faction-id-regex-pattern'");
             regexPattern = "[a-zA-Z0-9]{3,10}";
         }
         identifierRegexPattern = Pattern.compile(regexPattern);
@@ -55,6 +55,13 @@ public final class FactionsManager {
 
     public PlayerFaction getPlayerFactionByPlayer(UUID uuid) {
         return playerToFactionMap.get(uuid);
+    }
+
+    public void setPlayerFaction(UUID uuid, PlayerFaction playerFaction) {
+        if(playerFaction == null)
+            playerToFactionMap.remove(uuid);
+        else
+            playerToFactionMap.put(uuid, playerFaction);
     }
 
     public Faction getTemporaryFactionByPlayer(UUID uuid) {

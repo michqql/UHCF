@@ -1,3 +1,7 @@
+# <>--- Claims ---<>
+claimable-worlds:
+  - world
+
 # <>--- Advanced options ---<>
 # Do not change unless you know what you are doing
 faction-id-regex-pattern: '[a-zA-Z0-9]{3,10}'

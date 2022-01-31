@@ -68,6 +68,7 @@ public class CreateFactionSubCommand extends SubCommand {
         // Create faction
         PlayerFaction created = new PlayerFaction(name.toLowerCase(Locale.ROOT), player.getUniqueId());
         factionsManager.createPlayerFaction(created);
+        factionsManager.setPlayerFaction(player.getUniqueId(), created);
 
         // Set leader to player
         created.setDisplayName(name);

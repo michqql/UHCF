@@ -22,7 +22,7 @@ public final class UHCFPlugin extends JavaPlugin {
         final MessageHandler messageHandler = new MessageHandler(langFile.getConfig());
 
         final FactionsManager factionsManager = new FactionsManager(factionsConfig);
-        final ClaimsManager claimsManager = new ClaimsManager();
+        final ClaimsManager claimsManager = new ClaimsManager(factionsConfig);
 
         // Register Commands & Listeners
         Objects.requireNonNull(getCommand("faction"))
