@@ -11,6 +11,32 @@ command-usage:
   - '&cUsage: /%command%'
 
 faction-command:
+  no-permission:
+    - '&cYou must be a &e%role% &cto do this!'
+
+  not-in-faction:
+    - '&cYou are not in a faction!'
+
+  # /faction <faction>
+  # /faction info <faction>
+  # /faction who <faction>
+  info:
+    could-not-find-faction:
+      - '&cCould not find a faction named &f%faction.name%'
+
+    could-not-find-player:
+      - '&cCould not find a player named &f%player%'
+
+    no-faction:
+      - '&cPlayer &f%player% &cdoes not have a faction'
+
+    information:
+      - '&9Faction information (&e%faction.name%&9):'
+      - '&7Creator: &e%faction.creator%'
+      - '&7Leader: &e%faction.leader%'
+      - '&7Members: %faction.members.names% (&e%faction.members.online% / %faction.members.size%)'
+      - '&7Claims: &e%faction.claims%'
+
   # /faction create <name>
   create:
     already-in-faction:
@@ -47,6 +73,108 @@ faction-command:
 
     left-member:
       - '&7%player% has left your faction!'
+
+  # /faction invite <player>
+  invite:
+    not-in-faction:
+      - '&cYou are not in a faction!'
+
+    player-not-online:
+      - '&f%player% &cis not online!'
+
+    player-already-joined:
+      - '&f%player% &cis already a member of your faction'
+
+    invite-on-cooldown:
+      - '&cYou can invite &f%player% &cto your faction'
+      - '&cagain in &e%time% seconds'
+
+    invited:
+      faction:
+        - '&f%player% &7has been invited to your faction'
+
+      player:
+        - '&f%player% &7has invited you to join their faction, &e%faction.name%'
+        - '&7Type &e/faction join %faction.name% &7to join!'
+
+  # /faction kick <player>
+  kick:
+    not-in-your-faction:
+      - '&f%player% &cis not a member of your faction!'
+
+    cannot-kick-self:
+      - '&cYou cannot kick yourself! To leave, type &e/faction leave'
+
+    do-not-outrank:
+      - '&cYou do not outrank &f%player%&c, they are &e%role%'
+
+    kicked:
+      faction:
+        - '&f%player% &7has been kicked from the faction by &f%member%'
+
+      player:
+        - '&f%member% &7has kicked you from %faction.name%'
+
+  # /faction join <faction>
+  join:
+    already-in-faction:
+      - '&cYou are already in a faction, you must'
+      - '&cleave your current faction first'
+
+    faction-doesnt-exist:
+      - '&cA faction named &f%faction.name% &cdoesnt exist!'
+
+    not-invited:
+      - '&cYou have not been invited to join &f%faction.name%'
+
+    joined:
+      faction:
+        - '&f%player% &7has joined the faction'
+
+      player:
+        - '&7You have joined &f%faction.name%'
+
+  # /faction promote <player>
+  promote:
+    not-in-your-faction:
+      - '&f%player% &cis not a member of your faction!'
+
+    cannot-promote-self:
+      - '&cYou cannot promote yourself!'
+
+    do-not-outrank:
+      - '&cYou do not outrank &f%player%&c, they are &e%role%'
+
+    promoted:
+      you:
+        - '&f%player% &7has been promoted to &e%role%'
+
+      demoted-from-leader:
+        - '&7You have been demoted from &e%role.leader% &7to &e%role%'
+
+      player:
+        - '&f%player% &7has promoted you to &e%role%'
+
+  # /faction demote <player>
+  demote:
+    not-in-your-faction:
+      - '&f%player% &cis not a member of your faction!'
+
+    cannot-demote-self:
+      - '&cYou cannot demote yourself!'
+
+    do-not-outrank:
+      - '&cYou do not outrank &f%player%&c, they are &e%role%'
+
+    cannot-demote-further:
+      - '&f%player% &ccannot be demoted further, they are already &e%role%'
+
+    demoted:
+      you:
+        - '&f%player% &7has been demoted to &e%role%'
+
+      player:
+        - '&f%player% &7has demoted you to &e%role%'
 
 admin-command:
   # /admin create <name> [-p]

@@ -45,7 +45,7 @@ public class LeaveSubCommand extends SubCommand {
         // Check if player owns faction
         // (if so, they must promote another player first)
         Members members = faction.getMembers();
-        if(members.isOwner(uuid)) {
+        if(members.isLeader(uuid)) {
             messageHandler.sendList(player, "faction-command.leave.player-is-leader");
             return;
         }

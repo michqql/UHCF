@@ -1,5 +1,6 @@
 package me.michqql.uhcf;
 
+import me.michqql.core.gui.GuiHandler;
 import me.michqql.core.io.CommentFile;
 import me.michqql.core.util.MessageHandler;
 import me.michqql.uhcf.claim.ClaimsManager;
@@ -19,6 +20,7 @@ public final class UHCFPlugin extends JavaPlugin {
         final CommentFile langFile = new CommentFile(this, "", "lang");
         final CommentFile factionsConfig = new CommentFile(this, "configs", "factions_config");
 
+        final GuiHandler guiHandler = new GuiHandler(this);
         final MessageHandler messageHandler = new MessageHandler(langFile.getConfig());
 
         final FactionsManager factionsManager = new FactionsManager(factionsConfig);
@@ -26,7 +28,7 @@ public final class UHCFPlugin extends JavaPlugin {
 
         // Register Commands & Listeners
         Objects.requireNonNull(getCommand("faction"))
-                .setExecutor(new FactionCommandManager(this, messageHandler, factionsManager));
+                .setExecutor(new FactionCommandManager(this, messageHandler, guiHandler, factionsManager));
         Objects.requireNonNull(getCommand("admin"))
                 .setExecutor(new AdminCommandManager(this, messageHandler, factionsManager, claimsManager));
     }

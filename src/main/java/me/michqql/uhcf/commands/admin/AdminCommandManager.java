@@ -38,7 +38,7 @@ public class AdminCommandManager extends CommandManager {
     }
 
     @Override
-    protected void sendInvalidSubCommandMessage(CommandSender commandSender) {
+    protected void sendInvalidSubCommandMessage(CommandSender commandSender, String input) {
         messageHandler.sendList(commandSender, "invalid-command", new HashMap<>(){{
             put("command", getName());
         }});
