@@ -7,6 +7,7 @@ import me.michqql.uhcf.faction.FactionsManager;
 import me.michqql.uhcf.faction.PlayerFaction;
 import me.michqql.uhcf.faction.attributes.Members;
 import me.michqql.uhcf.faction.roles.FactionPermission;
+import me.michqql.uhcf.faction.roles.FactionRole;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -63,6 +64,13 @@ public class InviteSubCommand extends SubCommand {
             return;
         }
 
+        // Check if distributed size is less than maximum
+        if(!factionsManager.canInvitePlayer(playerFaction)) {
+            messageHandler.sendList(player, "faction-command.invite.cannot-invite-size",
+                    Placeholder.of("player", online.getName()));
+            return;
+        }
+
         HashMap<PlayerFaction, Long> invites = factionsManager.getPlayerInvites(online.getUniqueId());
         long inviteTimestamp = invites.getOrDefault(playerFaction, 0L);
         if(invites.containsKey(playerFaction) &&
@@ -111,9 +119,12 @@ public class InviteSubCommand extends SubCommand {
         if(faction == null)
             return null;
 
-        List<String> arguments = new ArrayList<>();
-
         Members members = faction.getMembers();
+        FactionRole playerRole = members.getFactionRole(player.getUniqueId());
+        if(!playerRole.hasPermission(FactionPermission.INVITE_MEMBERS))
+            return null;
+
+        List<String> arguments = new ArrayList<>();
         for(Player online : Bukkit.getOnlinePlayers()) {
             if(!members.isInFaction(online.getUniqueId()))
                 arguments.add(online.getName());

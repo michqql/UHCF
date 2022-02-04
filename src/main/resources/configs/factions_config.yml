@@ -1,7 +1,19 @@
-# <>--- Claims ---<>
-claimable-worlds:
-  - world
-
 # <>--- Advanced options ---<>
+# These settings are all advanced options
 # Do not change unless you know what you are doing
+
+# <>--- Factions ---<>
+# Faction id
 faction-id-regex-pattern: '[a-zA-Z0-9]{3,10}'
+
+# Maximum player sizes
+# The size is calculated by: size = (fS * fM) + (aS * aM) + (tS * tM)
+max-faction-size: 18
+max-distributed-size: 20.0 # the maximum combined size of faction members, ally members and truce members
+multipliers:
+  truce: 1.0
+  ally: 1.5
+  faction: 2.0
+
+# <>--- Claims ---<>
+claimable-world: 'world'

@@ -85,6 +85,9 @@ faction-command:
     player-already-joined:
       - '&f%player% &cis already a member of your faction'
 
+    cannot-invite-size:
+      - '&cYour faction cannot invite &f%player% &cas you have too many members, allies and truces!'
+
     invite-on-cooldown:
       - '&cYou can invite &f%player% &cto your faction'
       - '&cagain in &e%time% seconds'
@@ -176,7 +179,76 @@ faction-command:
       player:
         - '&f%player% &7has demoted you to &e%role%'
 
+  # /faction truce <faction>
+  truce:
+    could-not-find-faction:
+      - '&cCould not find a faction named &f%faction.name%'
+
+    already-truced:
+      - '&cYour faction and &f%faction.name% &care already truced'
+
+    cannot-truce-size:
+      - '&cYour faction cannot truce with &f%faction.name% &cas you have too many members, allies and truces!'
+
+    requested:
+      player-faction:
+        - '&f%player% &7has requested to truce with &e%faction.name%'
+
+      other-faction:
+        - '&e%faction.name% &7has requested to truce'
+        - '&7Type &e/faction truce %faction.name% &7to accept'
+
+    accepted:
+      player-faction:
+        - '&e%faction.name% &7and you are now truced'
+
+      other-faction:
+        - '&7You and &e%faction.name% &7are now truced'
+
+  # /faction ally <faction>
+  ally:
+    could-not-find-faction:
+      - '&cCould not find a faction named &f%faction.name%'
+
+    already-allied:
+      - '&cYour faction and &f%faction.name% &care already allies'
+
+    cannot-ally-size:
+      - '&cYour faction cannot ally with &f%faction.name% &cas you have too many members, allies and truces!'
+
+    requested:
+      player-faction:
+        - '&f%player% &7has requested alliance with &e%faction.name%'
+
+      other-faction:
+        - '&e%faction.name% &7has requested alliance'
+        - '&7Type &e/faction ally %faction.name% &7to accept'
+
+    accepted:
+      player-faction:
+        - '&e%faction.name% &7and you are now allies'
+
+      other-faction:
+        - '&7You and &e%faction.name% &7are now allies'
+
+  # /faction neutral <faction>
+  neutral:
+    could-not-find-faction:
+      - '&cCould not find a faction named &f%faction.name%'
+
+    no-relation:
+      - '&cYour faction and &f%faction.name% &care not allied or truced'
+
+    player-faction:
+      - '&f%player% &7has %un-type% &e%faction.name%'
+
+    other-faction:
+      - '&e%faction.name% &7has rejected %relation% against you'
+
 admin-command:
+  no-temporary-faction:
+    - '&cYou are not currently a temporary member of a faction!'
+
   # /admin create <name> [-p]
   create:
     usage:
@@ -196,19 +268,35 @@ admin-command:
 
   # /admin claim
   claim:
-    no-temp-faction:
-      - '&cYou are not currently a temporary member of a faction!'
-      - '&fIn order to use this, you must be a temp faction member'
-
     chunk-already-claimed:
-      - '&cThis chunk is already claimed by &f%faction%'
+      - '&cThis chunk is already claimed by &f%faction.name%'
+
+    cannot-claim:
+      - '&cThis chunk cannot be claimed for %faction.type% faction &f%faction.name%'
 
     chunk-claimed:
       - '&aClaimed %type% chunk for faction %faction%'
 
+  # /admin unclaim
+  unclaim:
+    chunk-not-claimed:
+      - '&cThis chunk is not claimed'
+
+    cannot-unclaim:
+      - '&cThis chunk cannot be unclaimed as it would split the claim into two'
+
+    chunk-unclaimed:
+      - '&7Unclaimed %faction.type% chunk for %faction.type% faction &e%faction.name%'
+
+  # /admin tempjoin <faction> [-p]
   temp-join:
     unknown-faction:
-      - '&CCould not find faction &f%faction%'
+      - '&CCould not find %faction.type% faction &f%faction%'
 
     joined:
       - '&7You have temporarily joined %faction.type% faction %faction%'
+
+  # /admin viewclaims
+  viewclaims:
+    toggled:
+      - '&7Viewing claims: %colour%%toggle%'

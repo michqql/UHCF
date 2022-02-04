@@ -2,11 +2,14 @@ package me.michqql.uhcf;
 
 import me.michqql.core.gui.GuiHandler;
 import me.michqql.core.io.CommentFile;
+import me.michqql.core.util.AbstractListener;
 import me.michqql.core.util.MessageHandler;
+
 import me.michqql.uhcf.claim.ClaimsManager;
 import me.michqql.uhcf.commands.admin.AdminCommandManager;
 import me.michqql.uhcf.commands.faction.FactionCommandManager;
 import me.michqql.uhcf.faction.FactionsManager;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
@@ -35,6 +38,6 @@ public final class UHCFPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        AbstractListener.unregister(this);
     }
 }

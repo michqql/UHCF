@@ -14,30 +14,27 @@ public class ClaimsManager {
 
     // Config
     private final CommentFile factionsConfigFile;
-    private final List<World> claimableWorlds;
+    private World claimableWorld;
 
     private final HashMap<Chunk, Claim> chunkToClaimMap = new HashMap<>();
 
     public ClaimsManager(CommentFile factionsConfigFile) {
         this.factionsConfigFile = factionsConfigFile;
-        this.claimableWorlds = new ArrayList<>();
         loadConfig();
     }
 
     private void loadConfig() {
         FileConfiguration f = factionsConfigFile.getConfig();
 
-        List<String> claimableWorldNames = f.getStringList("claimable-worlds");
-        if(claimableWorldNames.isEmpty()) {
-            Bukkit.getLogger().warning("[factions_config.yml] No claimable worlds in 'claimable-worlds'");
-        }
-
-        for(String worldName : claimableWorldNames) {
-            World world = Bukkit.getWorld(worldName);
-            if(world == null) {
-                Bukkit.getLogger().warning("[factions_config.yml] Invalid world in 'claimable-worlds': " + worldName);
+        String claimableWorldName = f.getString("claimable-world");
+        if(claimableWorldName == null || claimableWorldName.isEmpty()) {
+            Bukkit.getLogger().warning("[factions_config.yml] No claimable world specified 'claimable-world'");
+        } else {
+            World world = Bukkit.getWorld(claimableWorldName);
+            if (world == null) {
+                Bukkit.getLogger().warning("[factions_config.yml] Invalid world in 'claimable-world': " + claimableWorldName);
             } else {
-                claimableWorlds.add(world);
+                this.claimableWorld = world;
             }
         }
     }
@@ -55,50 +52,47 @@ public class ClaimsManager {
         return null;
     }
 
-    /**
-     * Checks a 5x5 area around the center chunk to see if
-     * the location is valid to claim
-     *
-     * @param playerFaction the claiming faction
-     * @param center the center chunk
-     * @return the claim that blocks this action from taking place,
-     *         or null if it claimed successfully
-     *         (Can also return null if the world is invalid)
-     */
-    public Claim claimPlayer3x3(PlayerFaction playerFaction, Chunk center) {
+    public Claim claimPlayerChunk(PlayerFaction playerFaction, Chunk chunk) {
         // Check world is claimable
         final PlayerClaim playerClaim = playerFaction.getClaim();
-        final World world = center.getWorld();
+        final World world = chunk.getWorld();
         if(!isWorldClaimable(world))
             return null;
 
-        // Check 5x5 area of chunks to check for any adjacent claims
-        Set<Claim> claims = getClaimsAroundCenter(center, 5);
-        for(Claim claim : claims) {
+        Claim claim = getClaimByChunk(chunk);
+        if(claim != null)
+            return claim;
+
+        // Check there are no other claims nearby
+        Set<Claim> nearby = getClaimsAroundCenter(chunk, 3);
+        for(Claim near : nearby) {
             // The area contains an admin claim, cannot claim
-            if(claim instanceof AdminClaim)
-                return claim;
+            if(near instanceof AdminClaim)
+                return near;
 
             // The area contains another factions claim, cannot claim
-            if(claim instanceof PlayerClaim otherClaim && !otherClaim.getOwningFaction().equals(playerFaction))
-                return claim;
+            if(near instanceof PlayerClaim otherClaim && !otherClaim.getOwningFaction().equals(playerFaction))
+                return near;
         }
 
         // There were no other claims blocking the area
-        // Now we get a 3x3 area of chunks and add to claim
-        for(int x = (center.getX() - 1); x <= (center.getX() + 1); x++) {
-            for(int z = (center.getZ() - 1); z <= (center.getZ() + 1); z++) {
-                Chunk chunk = world.getChunkAt(x, z);
-                playerClaim.getClaimedChunks().add(chunk);
+        // Check there is a connection between chunk and rest of claim
+        if(!playerClaim.isAdjacent(chunk))
+            return null;
 
-                chunkToClaimMap.put(chunk, playerClaim);
-            }
-        }
+        playerClaim.getClaimedChunks().add(chunk);
+        chunkToClaimMap.put(chunk, playerClaim);
         return null;
     }
 
+    public void unclaim(Chunk chunk) {
+        Claim claim = chunkToClaimMap.remove(chunk);
+        if(claim != null)
+            claim.unclaim(chunk);
+    }
+
     public boolean isWorldClaimable(World world) {
-        return claimableWorlds.contains(world);
+        return claimableWorld != null && claimableWorld.equals(world);
     }
 
     public boolean isChunkClaimed(Chunk chunk) {
@@ -109,17 +103,19 @@ public class ClaimsManager {
         return chunkToClaimMap.get(chunk);
     }
 
-    public Set<Claim> getClaimsAroundCenter(Chunk center, int squareRadius) {
+    public Set<Claim> getClaimsAroundCenter(Chunk center, int squareLength) {
         Set<Claim> claims = new HashSet<>();
 
         World world = center.getWorld();
-        int halfRadius = squareRadius / 2;
-        int x = center.getX() - halfRadius;
-        int z = center.getZ() - halfRadius;
+        int radius = squareLength / 2;
+        int x = center.getX() - radius;
+        int z = center.getZ() - radius;
 
-        for(int i = x; i < x + squareRadius; i++) {
-            for(int j = z; j < z + squareRadius; j++) {
-                claims.add(getClaimByChunk(world.getChunkAt(i, j)));
+        for(int i = x; i < x + squareLength; i++) {
+            for(int j = z; j < z + squareLength; j++) {
+                Claim chunk = getClaimByChunk(world.getChunkAt(i, j));
+                if(chunk != null)
+                    claims.add(chunk);
             }
         }
 

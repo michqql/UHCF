@@ -36,7 +36,10 @@ public class FactionCommandManager extends CommandManager {
                 new JoinSubCommand(bukkitPlugin, messageHandler, factionsManager),
                 new KickSubCommand(bukkitPlugin, messageHandler, factionsManager),
                 new PromoteSubCommand(bukkitPlugin, messageHandler, factionsManager),
-                new DemoteSubCommand(bukkitPlugin, messageHandler, factionsManager)
+                new DemoteSubCommand(bukkitPlugin, messageHandler, factionsManager),
+                new TruceSubCommand(bukkitPlugin, messageHandler, factionsManager),
+                new AllySubCommand(bukkitPlugin, messageHandler, factionsManager),
+                new NeutralSubCommand(bukkitPlugin, messageHandler, factionsManager)
         ));
     }
 
