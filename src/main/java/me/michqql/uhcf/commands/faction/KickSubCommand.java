@@ -40,9 +40,9 @@ public class KickSubCommand extends SubCommand {
 
         Members members = playerFaction.getMembers();
         if(!members.getFactionRole(player.getUniqueId())
-                .hasPermission(FactionPermission.KICK_MEMBERS)) {
+                .hasPermission(FactionPermission.MANAGE_MEMBERS)) {
             messageHandler.sendList(player, "faction-command.no-permission",
-                    Placeholder.of("role", FactionPermission.KICK_MEMBERS.getDefaultRole().toString()));
+                    Placeholder.of("role", FactionPermission.MANAGE_MEMBERS.getDefaultRole().toString()));
             return;
         }
 
@@ -121,7 +121,7 @@ public class KickSubCommand extends SubCommand {
 
         Members members = faction.getMembers();
         FactionRole playerRole = members.getFactionRole(player.getUniqueId());
-        if(!playerRole.hasPermission(FactionPermission.KICK_MEMBERS))
+        if(!playerRole.hasPermission(FactionPermission.MANAGE_MEMBERS))
             return null;
 
         List<String> arguments = new ArrayList<>();

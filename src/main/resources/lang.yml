@@ -245,6 +245,39 @@ faction-command:
     other-faction:
       - '&e%faction.name% &7has rejected %relation% against you'
 
+  # /faction claim
+  claim:
+    claimed-max:
+      - '&cYour faction has reached the maximum allowed size of &e%chunks% chunks'
+
+    claimed-limit:
+      - '&cYour faction has reached the claim limit of &e%chunks% chunks!'
+      - '&cInvite more members to increase the limit'
+
+    cannot-claim-world:
+      - '&cYou cannot claim in this world!'
+
+    not-adjacent:
+      - '&cClaims must be adjacent!'
+
+    obstructed:
+      - '&cCould not claim because another factions claim is too close'
+
+    claimed:
+      '&f%player% &7has claimed a chunk &e(%faction.claim.size%/%faction.claim.max%)'
+
+  # /faction unclaim [all]
+  unclaim:
+    chunk-not-owned:
+      - '&cYou must be within your claim to do this'
+
+    cannot-unclaim:
+      - '&cYou cannot unclaim this chunk as it would split your claim into two areas'
+
+    unclaimed:
+      - '&f%player% &7has unclaimed a chunk'
+
+
 admin-command:
   no-temporary-faction:
     - '&cYou are not currently a temporary member of a faction!'

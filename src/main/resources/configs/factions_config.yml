@@ -16,4 +16,12 @@ multipliers:
   faction: 2.0
 
 # <>--- Claims ---<>
+player-claims:
+  default: 3
+  increase_per_member: 1
+  maximum: 9
+
 claimable-world: 'world'
+
+upkeep:
+  scale: 100

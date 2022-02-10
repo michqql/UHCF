@@ -31,7 +31,11 @@ public final class UHCFPlugin extends JavaPlugin {
 
         // Register Commands & Listeners
         Objects.requireNonNull(getCommand("faction"))
-                .setExecutor(new FactionCommandManager(this, messageHandler, guiHandler, factionsManager));
+                .setExecutor(new FactionCommandManager(
+                        this, messageHandler, guiHandler, factionsManager,
+                        claimsManager, factionsConfig.getConfig()
+                ));
+
         Objects.requireNonNull(getCommand("admin"))
                 .setExecutor(new AdminCommandManager(this, messageHandler, factionsManager, claimsManager));
     }

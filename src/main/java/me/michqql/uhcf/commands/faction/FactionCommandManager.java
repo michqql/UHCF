@@ -4,10 +4,12 @@ import me.michqql.core.command.CommandManager;
 import me.michqql.core.command.SubCommand;
 import me.michqql.core.gui.GuiHandler;
 import me.michqql.core.util.MessageHandler;
+import me.michqql.uhcf.claim.ClaimsManager;
 import me.michqql.uhcf.faction.FactionsManager;
 import me.michqql.uhcf.faction.PlayerFaction;
 import me.michqql.uhcf.gui.faction.ViewFactionInfoGui;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -17,12 +19,17 @@ public class FactionCommandManager extends CommandManager {
 
     private final GuiHandler guiHandler;
     private final FactionsManager factionsManager;
+    private final ClaimsManager claimsManager;
+    private final FileConfiguration factionsConfig;
 
     public FactionCommandManager(Plugin bukkitPlugin, MessageHandler messageHandler,
-                                 GuiHandler guiHandler, FactionsManager factionsManager) {
+                                 GuiHandler guiHandler, FactionsManager factionsManager,
+                                 ClaimsManager claimsManager, FileConfiguration factionsConfig) {
         super(bukkitPlugin, messageHandler);
         this.guiHandler = guiHandler;
         this.factionsManager = factionsManager;
+        this.claimsManager = claimsManager;
+        this.factionsConfig = factionsConfig;
     }
 
     @Override
@@ -39,7 +46,9 @@ public class FactionCommandManager extends CommandManager {
                 new DemoteSubCommand(bukkitPlugin, messageHandler, factionsManager),
                 new TruceSubCommand(bukkitPlugin, messageHandler, factionsManager),
                 new AllySubCommand(bukkitPlugin, messageHandler, factionsManager),
-                new NeutralSubCommand(bukkitPlugin, messageHandler, factionsManager)
+                new NeutralSubCommand(bukkitPlugin, messageHandler, factionsManager),
+                new ClaimSubCommand(bukkitPlugin, messageHandler, factionsManager, claimsManager, factionsConfig),
+                new UnclaimSubCommand(bukkitPlugin, messageHandler, factionsManager, claimsManager)
         ));
     }
 

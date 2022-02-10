@@ -9,7 +9,6 @@ import me.michqql.uhcf.faction.attributes.Members;
 import me.michqql.uhcf.faction.roles.FactionPermission;
 import me.michqql.uhcf.faction.roles.FactionRole;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -38,9 +37,9 @@ public class InviteSubCommand extends SubCommand {
         }
 
         if(!playerFaction.getMembers().getFactionRole(player.getUniqueId())
-                .hasPermission(FactionPermission.INVITE_MEMBERS)) {
+                .hasPermission(FactionPermission.MANAGE_MEMBERS)) {
             messageHandler.sendList(player, "faction-command.no-permission",
-                    Placeholder.of("role", FactionPermission.INVITE_MEMBERS.getDefaultRole().toString()));
+                    Placeholder.of("role", FactionPermission.MANAGE_MEMBERS.getDefaultRole().toString()));
             return;
         }
 
@@ -121,7 +120,7 @@ public class InviteSubCommand extends SubCommand {
 
         Members members = faction.getMembers();
         FactionRole playerRole = members.getFactionRole(player.getUniqueId());
-        if(!playerRole.hasPermission(FactionPermission.INVITE_MEMBERS))
+        if(!playerRole.hasPermission(FactionPermission.MANAGE_MEMBERS))
             return null;
 
         List<String> arguments = new ArrayList<>();

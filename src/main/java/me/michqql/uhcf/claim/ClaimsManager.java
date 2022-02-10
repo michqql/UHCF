@@ -59,7 +59,8 @@ public class ClaimsManager {
         if(!isWorldClaimable(world))
             return null;
 
-        Claim claim = getClaimByChunk(chunk);
+        // Check claim at this chunk -> if there is a claim this saves 4 chunks of processing
+        final Claim claim = getClaimByChunk(chunk);
         if(claim != null)
             return claim;
 
