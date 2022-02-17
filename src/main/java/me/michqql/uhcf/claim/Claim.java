@@ -1,13 +1,52 @@
 package me.michqql.uhcf.claim;
 
+import me.michqql.core.data.IData;
+import me.michqql.core.data.IReadWrite;
+import me.michqql.uhcf.UHCFPlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 
 import java.util.*;
 
-public abstract class Claim {
+public abstract class Claim implements IReadWrite {
 
     protected final Set<Chunk> chunks = new HashSet<>();
+
+    @Override
+    public void read(IData data) {
+        ClaimsManager claimsManager = UHCFPlugin.getInstance().getClaimsManager();
+        World world = claimsManager.getClaimableWorld();
+
+        List<String> serializedChunks = data.getStringList("chunks");
+        for(String s : serializedChunks) {
+            String[] split = s.split(",");
+            int x;
+            int z;
+
+            try {
+                x = Integer.parseInt(split[0]);
+                z = Integer.parseInt(split[1]);
+            } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                Bukkit.getLogger().warning("[UHCF] Error while loading Claim: invalid chunk data");
+                continue;
+            }
+
+            Chunk chunk = world.getChunkAt(x, z);
+            claim(chunk);
+            claimsManager.registerClaim(this, chunk);
+        }
+    }
+
+    @Override
+    public void write(IData data) {
+        List<String> serializedChunks = new ArrayList<>();
+        chunks.forEach(chunk -> {
+            serializedChunks.add(chunk.getX() + "," + chunk.getZ());
+        });
+
+        data.set("chunks", serializedChunks);
+    }
 
     void claim(Chunk chunk) {
         chunks.add(chunk);

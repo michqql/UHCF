@@ -2,8 +2,11 @@ package me.michqql.uhcf.faction;
 
 import me.michqql.core.io.CommentFile;
 import me.michqql.core.util.Pair;
+import me.michqql.uhcf.UHCFPlugin;
 import me.michqql.uhcf.faction.attributes.Members;
 import me.michqql.uhcf.faction.attributes.Relations;
+import me.michqql.uhcf.faction.load.FactionLoader;
+import me.michqql.uhcf.faction.load.JsonFactionLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -15,6 +18,7 @@ public final class FactionsManager {
 
     // Config
     private final CommentFile factionsConfigFile;
+    private String saveMethod;
     private Pattern identifierRegexPattern;
     private int maximumFactionSize;
     private double maximumDistributedSize;
@@ -26,11 +30,16 @@ public final class FactionsManager {
     private final HashMap<String, PlayerFaction> playerFactions = new HashMap<>();
     private final HashMap<String, AdminFaction> adminFactions = new HashMap<>();
 
+    // Saving
+    private FactionLoader loader;
+
     // Faction members
     private final HashMap<UUID, PlayerFaction> playerToFactionMap = new HashMap<>();
+    // TODO: Clean up temporary members
     private final HashMap<UUID, Faction> temporaryPlayerToFactionMap = new HashMap<>();
 
     // Faction invites & requests
+    // TODO: Refactor into different class
     private final HashMap<UUID, HashMap<PlayerFaction, Long>> playerInvites = new HashMap<>();
     private final HashMap<PlayerFaction, HashMap<PlayerFaction, Pair<Relations.Relation, Long>>> relationRequests = new HashMap<>();
 
@@ -39,12 +48,20 @@ public final class FactionsManager {
         loadConfig();
     }
 
+    // TODO: Clean up methods
+
     private void loadConfig() {
         FileConfiguration f = factionsConfigFile.getConfig();
 
+        this.saveMethod = f.getString("save-method", "json");
+        if("json".equalsIgnoreCase(saveMethod)) {
+            // TODO: lazy
+            this.loader = new JsonFactionLoader(UHCFPlugin.getInstance(), this);
+        }
+
         String regexPattern = f.getString("faction-id-regex-pattern");
         if(regexPattern == null) {
-            Bukkit.getLogger().warning("[factions_config.yml] No faction id regex pattern given at 'faction-id-regex-pattern'");
+            Bukkit.getLogger().warning("[config.yml] No faction id regex pattern given at 'faction-id-regex-pattern'");
             regexPattern = "[a-zA-Z0-9]{3,10}";
         }
         this.identifierRegexPattern = Pattern.compile(regexPattern);
@@ -54,6 +71,16 @@ public final class FactionsManager {
         this.factionWeight = f.getDouble("multipliers.truce", 1.0D);
         this.truceWeight = f.getDouble("multipliers.ally", 1.5D);
         this.allianceWeight = f.getDouble("multipliers.faction", 2.0D);
+    }
+
+    public void save() {
+        loader.saveAdminAll();
+        loader.savePlayerAll();
+    }
+
+    public void load() {
+        loader.loadAdminSaved();
+        loader.loadPlayerSaved();
     }
 
     public Collection<PlayerFaction> getPlayerFactions() {
@@ -66,6 +93,10 @@ public final class FactionsManager {
 
     public void createPlayerFaction(PlayerFaction faction) {
         playerFactions.putIfAbsent(faction.getUniqueIdentifier(), faction);
+    }
+
+    public Collection<AdminFaction> getAdminFactions() {
+        return Collections.unmodifiableCollection(adminFactions.values());
     }
 
     public AdminFaction getAdminFactionById(String id) {

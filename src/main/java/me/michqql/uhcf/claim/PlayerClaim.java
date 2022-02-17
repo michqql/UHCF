@@ -4,9 +4,6 @@ import me.michqql.uhcf.claim.traversal.ClaimTraversal;
 import me.michqql.uhcf.faction.PlayerFaction;
 import org.bukkit.Chunk;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class PlayerClaim extends Claim {
 
     private final PlayerFaction owner;

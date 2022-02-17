@@ -1,17 +1,59 @@
 package me.michqql.uhcf.faction.attributes;
 
+import me.michqql.core.data.IData;
+import me.michqql.core.data.IReadWrite;
 import me.michqql.uhcf.faction.roles.FactionRole;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class Members {
+public class Members implements IReadWrite {
 
     private UUID leader;
     private final HashMap<UUID, FactionRole> members = new HashMap<>();
+
+    @Override
+    public void read(IData data) {
+        String leaderUuidString = data.getString("leader");
+        UUID leaderUuid;
+        try {
+            leaderUuid = UUID.fromString(leaderUuidString);
+        } catch(IllegalArgumentException e) {
+            Bukkit.getLogger().warning("[UHCF] Error while loading Members: malformed leader uuid");
+            throw e;
+        }
+
+        setLeader(leaderUuid);
+
+        IData memberData = data.getSection("members");
+        for(String memberUuidString : memberData.getKeys()) {
+            UUID memberUuid;
+            try {
+                memberUuid = UUID.fromString(memberUuidString);
+            } catch(IllegalArgumentException e) {
+                Bukkit.getLogger().warning("[UHCF] Error while loading Members: malformed member uuid");
+                throw e;
+            }
+
+            String roleString = memberData.getString(memberUuidString);
+            FactionRole role = FactionRole.valueOf(roleString);
+
+            addMember(memberUuid);
+            setFactionRole(memberUuid, role);
+        }
+    }
+
+    @Override
+    public void write(IData data) {
+        data.set("leader", leader.toString());
+
+        IData memberData = data.createSection("members");
+        members.forEach((memberUuid, factionRole) -> {
+            memberData.set(memberUuid.toString(), factionRole.toString());
+        });
+    }
 
     public UUID getLeader() {
         return leader;

@@ -74,7 +74,14 @@
         <dependency>
             <groupId>me.michqql</groupId>
             <artifactId>Core</artifactId>
-            <version>1.3</version>
+            <version>1.4</version>
+        </dependency>
+
+        <!-- String similarities -->
+        <dependency>
+            <groupId>net.ricecode</groupId>
+            <artifactId>string-similarity</artifactId>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 </project>

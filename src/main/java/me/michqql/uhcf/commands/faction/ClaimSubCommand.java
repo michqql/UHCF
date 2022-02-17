@@ -88,12 +88,19 @@ public class ClaimSubCommand extends SubCommand {
         }
 
         // Successfully claimed
-        messageHandler.sendList(player, "faction-command.claim.claimed", new HashMap<>(){{
+        HashMap<String, String> placeholders = new HashMap<>(){{
             put("player", player.getName());
             put("member", player.getName());
+            put("faction.claim.size", String.valueOf(claim.getNumberOfChunks()));
             put("faction.claims.size", String.valueOf(claim.getNumberOfChunks()));
+            put("faction.claim.max", String.valueOf(maxForFaction));
             put("faction.claims.max", String.valueOf(maxForFaction));
-        }});
+            put("x", String.valueOf(chunk.getX()));
+            put("z", String.valueOf(chunk.getZ()));
+        }};
+        for(Player online : faction.getMembers().getOnlinePlayers()) {
+            messageHandler.sendList(online, "faction-command.claim.claimed", placeholders);
+        }
     }
 
     private int getMaximumClaims(PlayerFaction faction, int max) {

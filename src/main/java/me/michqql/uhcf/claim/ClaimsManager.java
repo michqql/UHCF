@@ -28,11 +28,11 @@ public class ClaimsManager {
 
         String claimableWorldName = f.getString("claimable-world");
         if(claimableWorldName == null || claimableWorldName.isEmpty()) {
-            Bukkit.getLogger().warning("[factions_config.yml] No claimable world specified 'claimable-world'");
+            Bukkit.getLogger().warning("[config.yml] No claimable world specified 'claimable-world'");
         } else {
             World world = Bukkit.getWorld(claimableWorldName);
             if (world == null) {
-                Bukkit.getLogger().warning("[factions_config.yml] Invalid world in 'claimable-world': " + claimableWorldName);
+                Bukkit.getLogger().warning("[config.yml] Invalid world in 'claimable-world': " + claimableWorldName);
             } else {
                 this.claimableWorld = world;
             }
@@ -86,10 +86,18 @@ public class ClaimsManager {
         return null;
     }
 
+    void registerClaim(Claim claim, Chunk chunk) {
+        chunkToClaimMap.put(chunk, claim);
+    }
+
     public void unclaim(Chunk chunk) {
         Claim claim = chunkToClaimMap.remove(chunk);
         if(claim != null)
             claim.unclaim(chunk);
+    }
+
+    public World getClaimableWorld() {
+        return claimableWorld;
     }
 
     public boolean isWorldClaimable(World world) {

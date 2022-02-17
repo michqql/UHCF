@@ -1,3 +1,6 @@
+# Methods are: JSON or YAML
+save-method: 'json'
+
 # <>--- Advanced options ---<>
 # These settings are all advanced options
 # Do not change unless you know what you are doing

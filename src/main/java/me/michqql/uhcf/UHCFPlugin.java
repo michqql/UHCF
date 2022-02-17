@@ -18,16 +18,29 @@ public final class UHCFPlugin extends JavaPlugin {
 
     public final static String ADMIN_PERMISSION = "uhcf.admin";
 
+    private static UHCFPlugin instance;
+
+    public static UHCFPlugin getInstance() {
+        return instance;
+    }
+
+    private FactionsManager factionsManager;
+    private ClaimsManager claimsManager;
+
     @Override
     public void onEnable() {
+        instance = this;
+
         final CommentFile langFile = new CommentFile(this, "", "lang");
-        final CommentFile factionsConfig = new CommentFile(this, "configs", "factions_config");
+        final CommentFile factionsConfig = new CommentFile(this, "", "config");
 
         final GuiHandler guiHandler = new GuiHandler(this);
         final MessageHandler messageHandler = new MessageHandler(langFile.getConfig());
 
-        final FactionsManager factionsManager = new FactionsManager(factionsConfig);
-        final ClaimsManager claimsManager = new ClaimsManager(factionsConfig);
+        this.factionsManager = new FactionsManager(factionsConfig);
+        this.claimsManager = new ClaimsManager(factionsConfig);
+
+        factionsManager.load();
 
         // Register Commands & Listeners
         Objects.requireNonNull(getCommand("faction"))
@@ -43,5 +56,16 @@ public final class UHCFPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         AbstractListener.unregister(this);
+
+        // Save data
+        factionsManager.save();
+    }
+
+    public FactionsManager getFactionsManager() {
+        return factionsManager;
+    }
+
+    public ClaimsManager getClaimsManager() {
+        return claimsManager;
     }
 }

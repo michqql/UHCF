@@ -30,6 +30,13 @@ faction-command:
     no-faction:
       - '&cPlayer &f%player% &cdoes not have a faction'
 
+    multiple-factions:
+      - '&7Multiple factions match that name! Please be more specific'
+      - '&7[&e%list%&7]'
+
+    similar-match:
+      - '&7Showing result for similar match &e(%input% -> %faction.name%)'
+
     information:
       - '&9Faction information (&e%faction.name%&9):'
       - '&7Creator: &e%faction.creator%'
@@ -264,7 +271,7 @@ faction-command:
       - '&cCould not claim because another factions claim is too close'
 
     claimed:
-      '&f%player% &7has claimed a chunk &e(%faction.claim.size%/%faction.claim.max%)'
+      - '&f%player% &7has claimed a chunk at &a<X: %x%, Z: %z%> &e(%faction.claim.size%/%faction.claim.max%)'
 
   # /faction unclaim [all]
   unclaim:
