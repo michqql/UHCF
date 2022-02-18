@@ -6,6 +6,7 @@ import me.michqql.core.util.Placeholder;
 import me.michqql.uhcf.claim.Claim;
 import me.michqql.uhcf.claim.ClaimsManager;
 import me.michqql.uhcf.claim.PlayerClaim;
+import me.michqql.uhcf.claim.outline.ClaimOutlineManager;
 import me.michqql.uhcf.faction.FactionsManager;
 import me.michqql.uhcf.faction.PlayerFaction;
 import me.michqql.uhcf.faction.roles.FactionPermission;
@@ -23,15 +24,17 @@ public class ClaimSubCommand extends SubCommand {
 
     private final FactionsManager factionsManager;
     private final ClaimsManager claimsManager;
+    private final ClaimOutlineManager claimOutlineManager;
 
     private final FileConfiguration config;
 
     public ClaimSubCommand(Plugin bukkitPlugin, MessageHandler messageHandler,
                            FactionsManager factionsManager, ClaimsManager claimsManager,
-                           FileConfiguration config) {
+                           ClaimOutlineManager claimOutlineManager, FileConfiguration config) {
         super(bukkitPlugin, messageHandler);
         this.factionsManager = factionsManager;
         this.claimsManager = claimsManager;
+        this.claimOutlineManager = claimOutlineManager;
         this.config = config;
     }
 
@@ -73,6 +76,11 @@ public class ClaimSubCommand extends SubCommand {
             return;
         }
 
+        if(claim.isClaimed(chunk)) {
+            messageHandler.sendList(player, "faction-command.claim.already-claimed");
+            return;
+        }
+
         if(!claim.isAdjacent(chunk)) {
             messageHandler.sendList(player, "faction-command.claim.not-adjacent");
             return;
@@ -88,6 +96,7 @@ public class ClaimSubCommand extends SubCommand {
         }
 
         // Successfully claimed
+        claimOutlineManager.onClaim(claim, chunk);
         HashMap<String, String> placeholders = new HashMap<>(){{
             put("player", player.getName());
             put("member", player.getName());

@@ -5,12 +5,14 @@ import me.michqql.core.util.MessageHandler;
 import me.michqql.core.util.Placeholder;
 import me.michqql.uhcf.claim.ClaimsManager;
 import me.michqql.uhcf.claim.PlayerClaim;
+import me.michqql.uhcf.claim.outline.ClaimOutlineManager;
 import me.michqql.uhcf.faction.FactionsManager;
 import me.michqql.uhcf.faction.PlayerFaction;
 import me.michqql.uhcf.faction.roles.FactionPermission;
 import me.michqql.uhcf.faction.roles.FactionRole;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -21,12 +23,18 @@ public class UnclaimSubCommand extends SubCommand {
 
     private final FactionsManager factionsManager;
     private final ClaimsManager claimsManager;
+    private final ClaimOutlineManager claimOutlineManager;
+
+    private final FileConfiguration config;
 
     public UnclaimSubCommand(Plugin bukkitPlugin, MessageHandler messageHandler,
-                             FactionsManager factionsManager, ClaimsManager claimsManager) {
+                             FactionsManager factionsManager, ClaimsManager claimsManager,
+                             ClaimOutlineManager claimOutlineManager, FileConfiguration config) {
         super(bukkitPlugin, messageHandler);
         this.factionsManager = factionsManager;
         this.claimsManager = claimsManager;
+        this.claimOutlineManager = claimOutlineManager;
+        this.config = config;
     }
 
     @Override
@@ -58,11 +66,30 @@ public class UnclaimSubCommand extends SubCommand {
         }
 
         claimsManager.unclaim(chunk);
+        claimOutlineManager.onUnclaim(claim, chunk);
 
-        messageHandler.sendList(player, "faction-command.unclaim.unclaimed", new HashMap<>(){{
+        final int maxForFaction = getMaximumClaims(faction);
+        HashMap<String, String> placeholders = new HashMap<>(){{
             put("player", player.getName());
             put("member", player.getName());
-        }});
+            put("faction.claim.size", String.valueOf(claim.getNumberOfChunks()));
+            put("faction.claims.size", String.valueOf(claim.getNumberOfChunks()));
+            put("faction.claim.max", String.valueOf(maxForFaction));
+            put("faction.claims.max", String.valueOf(maxForFaction));
+            put("x", String.valueOf(chunk.getX()));
+            put("z", String.valueOf(chunk.getZ()));
+        }};
+        for(Player online : faction.getMembers().getOnlinePlayers()) {
+            messageHandler.sendList(online, "faction-command.unclaim.unclaimed", placeholders);
+        }
+    }
+
+    private int getMaximumClaims(PlayerFaction faction) {
+        int max = config.getInt("player-claims.maximum");
+        int def = config.getInt("player-claims.default");
+        int increase = config.getInt("player-claims.increase_per_member");
+
+        return Math.min(max, def + (increase * (faction.getMembers().getSize() - 1)));
     }
 
     @Override

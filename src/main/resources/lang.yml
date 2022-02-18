@@ -264,6 +264,9 @@ faction-command:
     cannot-claim-world:
       - '&cYou cannot claim in this world!'
 
+    already-claimed:
+      - '&cYour faction has already claimed this chunk!'
+
     not-adjacent:
       - '&cClaims must be adjacent!'
 
@@ -282,7 +285,7 @@ faction-command:
       - '&cYou cannot unclaim this chunk as it would split your claim into two areas'
 
     unclaimed:
-      - '&f%player% &7has unclaimed a chunk'
+      - '&f%player% &7has unclaimed a chunk at &a<X: %x%, Z: %z%> &e(%faction.claim.size%/%faction.claim.max%)'
 
 
 admin-command:

@@ -6,10 +6,13 @@ import me.michqql.core.util.AbstractListener;
 import me.michqql.core.util.MessageHandler;
 
 import me.michqql.uhcf.claim.ClaimsManager;
+import me.michqql.uhcf.claim.outline.ClaimOutlineManager;
 import me.michqql.uhcf.commands.admin.AdminCommandManager;
 import me.michqql.uhcf.commands.faction.FactionCommandManager;
 import me.michqql.uhcf.faction.FactionsManager;
 
+import me.michqql.uhcf.listeners.building.BlockListener;
+import me.michqql.uhcf.listeners.claims.MovementListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
@@ -27,6 +30,8 @@ public final class UHCFPlugin extends JavaPlugin {
     private FactionsManager factionsManager;
     private ClaimsManager claimsManager;
 
+    private ClaimOutlineManager claimOutlineManager;
+
     @Override
     public void onEnable() {
         instance = this;
@@ -39,18 +44,23 @@ public final class UHCFPlugin extends JavaPlugin {
 
         this.factionsManager = new FactionsManager(factionsConfig);
         this.claimsManager = new ClaimsManager(factionsConfig);
-
         factionsManager.load();
+
+        this.claimOutlineManager = new ClaimOutlineManager(this);
 
         // Register Commands & Listeners
         Objects.requireNonNull(getCommand("faction"))
                 .setExecutor(new FactionCommandManager(
                         this, messageHandler, guiHandler, factionsManager,
-                        claimsManager, factionsConfig.getConfig()
+                        claimsManager, claimOutlineManager, factionsConfig.getConfig()
                 ));
 
         Objects.requireNonNull(getCommand("admin"))
                 .setExecutor(new AdminCommandManager(this, messageHandler, factionsManager, claimsManager));
+
+        // Listeners
+        new MovementListener(this);
+        new BlockListener(this, factionsManager, claimsManager, claimOutlineManager);
     }
 
     @Override
@@ -59,6 +69,8 @@ public final class UHCFPlugin extends JavaPlugin {
 
         // Save data
         factionsManager.save();
+
+        claimOutlineManager.onDisable();
     }
 
     public FactionsManager getFactionsManager() {
