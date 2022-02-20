@@ -15,6 +15,7 @@ public class PlayerClaim extends Claim {
         this.owner = owner;
     }
 
+    @Override
     public PlayerFaction getOwningFaction() {
         return owner;
     }

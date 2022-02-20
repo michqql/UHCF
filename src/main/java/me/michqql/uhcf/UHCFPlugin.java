@@ -60,7 +60,7 @@ public final class UHCFPlugin extends JavaPlugin {
 
         // Listeners
         new MovementListener(this);
-        new BlockListener(this, factionsManager, claimsManager, claimOutlineManager);
+        new BlockListener(this, messageHandler, factionsManager, claimsManager, claimOutlineManager);
     }
 
     @Override

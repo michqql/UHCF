@@ -1,6 +1,7 @@
 package me.michqql.uhcf.claim;
 
 import me.michqql.uhcf.faction.AdminFaction;
+import me.michqql.uhcf.faction.Faction;
 
 public class AdminClaim extends Claim {
 
@@ -11,6 +12,11 @@ public class AdminClaim extends Claim {
     }
 
     public AdminFaction getAdminFactionOwner() {
+        return owner;
+    }
+
+    @Override
+    public Faction getOwningFaction() {
         return owner;
     }
 }

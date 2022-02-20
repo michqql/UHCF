@@ -287,7 +287,6 @@ faction-command:
     unclaimed:
       - '&f%player% &7has unclaimed a chunk at &a<X: %x%, Z: %z%> &e(%faction.claim.size%/%faction.claim.max%)'
 
-
 admin-command:
   no-temporary-faction:
     - '&cYou are not currently a temporary member of a faction!'
@@ -343,3 +342,6 @@ admin-command:
   viewclaims:
     toggled:
       - '&7Viewing claims: %colour%%toggle%'
+
+interactions:
+  - '&cYou cannot %interaction% in &f%faction.name%'

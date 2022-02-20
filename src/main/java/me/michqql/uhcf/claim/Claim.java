@@ -3,6 +3,7 @@ package me.michqql.uhcf.claim;
 import me.michqql.core.data.IData;
 import me.michqql.core.data.IReadWrite;
 import me.michqql.uhcf.UHCFPlugin;
+import me.michqql.uhcf.faction.Faction;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
@@ -47,6 +48,8 @@ public abstract class Claim implements IReadWrite {
 
         data.set("chunks", serializedChunks);
     }
+
+    public abstract Faction getOwningFaction();
 
     void claim(Chunk chunk) {
         chunks.add(chunk);
