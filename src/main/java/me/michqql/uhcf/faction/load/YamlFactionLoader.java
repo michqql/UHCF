@@ -1,7 +1,7 @@
 package me.michqql.uhcf.faction.load;
 
-import me.michqql.core.data.JsonData;
-import me.michqql.core.io.JsonFile;
+import me.michqql.core.data.YamlData;
+import me.michqql.core.io.YamlFile;
 import me.michqql.core.util.FileUtils;
 import me.michqql.uhcf.UHCFPlugin;
 import me.michqql.uhcf.faction.AdminFaction;
@@ -11,16 +11,16 @@ import me.michqql.uhcf.faction.attributes.Members;
 
 import java.util.List;
 
-public class JsonFactionLoader extends FactionLoader {
+public class YamlFactionLoader extends FactionLoader {
 
-    public JsonFactionLoader(UHCFPlugin plugin, FactionsManager factionsManager) {
+    public YamlFactionLoader(UHCFPlugin plugin, FactionsManager factionsManager) {
         super(plugin, factionsManager);
     }
 
     @Override
     public void loadPlayer(String id) {
-        JsonFile file = new JsonFile(plugin, PLAYER_FACTIONS_DIRECTORY, id);
-        JsonData data = new JsonData(file);
+        YamlFile file = new YamlFile(plugin, PLAYER_FACTIONS_DIRECTORY, id);
+        YamlData data = new YamlData(file);
 
         PlayerFaction playerFaction = new PlayerFaction(id);
         playerFaction.read(data);
@@ -42,8 +42,8 @@ public class JsonFactionLoader extends FactionLoader {
 
     @Override
     public void savePlayer(PlayerFaction faction) {
-        JsonFile file = new JsonFile(plugin, PLAYER_FACTIONS_DIRECTORY, faction.getUniqueIdentifier());
-        JsonData data = new JsonData(file);
+        YamlFile file = new YamlFile(plugin, PLAYER_FACTIONS_DIRECTORY, faction.getUniqueIdentifier());
+        YamlData data = new YamlData(file);
 
         faction.write(data);
         data.save();
@@ -57,8 +57,8 @@ public class JsonFactionLoader extends FactionLoader {
 
     @Override
     public void loadAdmin(String id) {
-        JsonFile file = new JsonFile(plugin, ADMIN_FACTIONS_DIRECTORY, id);
-        JsonData data = new JsonData(file);
+        YamlFile file = new YamlFile(plugin, ADMIN_FACTIONS_DIRECTORY, id);
+        YamlData data = new YamlData(file);
 
         AdminFaction adminFaction = new AdminFaction(id);
         adminFaction.read(data);
@@ -76,8 +76,8 @@ public class JsonFactionLoader extends FactionLoader {
 
     @Override
     public void saveAdmin(AdminFaction faction) {
-        JsonFile file = new JsonFile(plugin, ADMIN_FACTIONS_DIRECTORY, faction.getUniqueIdentifier());
-        JsonData data = new JsonData(file);
+        YamlFile file = new YamlFile(plugin, ADMIN_FACTIONS_DIRECTORY, faction.getUniqueIdentifier());
+        YamlData data = new YamlData(file);
 
         faction.write(data);
         data.save();

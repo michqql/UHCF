@@ -7,6 +7,7 @@ import me.michqql.uhcf.faction.attributes.Members;
 import me.michqql.uhcf.faction.attributes.Relations;
 import me.michqql.uhcf.faction.load.FactionLoader;
 import me.michqql.uhcf.faction.load.JsonFactionLoader;
+import me.michqql.uhcf.faction.load.YamlFactionLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -16,9 +17,10 @@ import java.util.regex.Pattern;
 
 public final class FactionsManager {
 
+    private final UHCFPlugin plugin;
+
     // Config
-    private final CommentFile factionsConfigFile;
-    private String saveMethod;
+    private final CommentFile configFile;
     private Pattern identifierRegexPattern;
     private int maximumFactionSize;
     private double maximumDistributedSize;
@@ -43,20 +45,28 @@ public final class FactionsManager {
     private final HashMap<UUID, HashMap<PlayerFaction, Long>> playerInvites = new HashMap<>();
     private final HashMap<PlayerFaction, HashMap<PlayerFaction, Pair<Relations.Relation, Long>>> relationRequests = new HashMap<>();
 
-    public FactionsManager(CommentFile factionsConfigFile) {
-        this.factionsConfigFile = factionsConfigFile;
+    public FactionsManager(UHCFPlugin plugin, CommentFile configFile) {
+        this.plugin = plugin;
+        this.configFile = configFile;
         loadConfig();
     }
 
     // TODO: Clean up methods
 
     private void loadConfig() {
-        FileConfiguration f = factionsConfigFile.getConfig();
+        FileConfiguration f = configFile.getConfig();
 
-        this.saveMethod = f.getString("save-method", "json");
+        String saveMethod = f.getString("save-method", "json");
         if("json".equalsIgnoreCase(saveMethod)) {
             // TODO: lazy
-            this.loader = new JsonFactionLoader(UHCFPlugin.getInstance(), this);
+            this.loader = new JsonFactionLoader(plugin, this);
+        }
+        else if("yaml".equalsIgnoreCase(saveMethod) || "yml".equalsIgnoreCase(saveMethod)) {
+            this.loader = new YamlFactionLoader(plugin, this);
+        }
+        else {
+            Bukkit.getLogger().severe("[UHCF] Unsupported factions loader: " + saveMethod);
+            this.loader = null;
         }
 
         String regexPattern = f.getString("faction-id-regex-pattern");

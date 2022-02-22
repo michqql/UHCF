@@ -1,4 +1,4 @@
-package me.michqql.uhcf.listeners;
+package me.michqql.uhcf.listeners.custom;
 
 import me.michqql.core.util.AbstractListener;
 import me.michqql.uhcf.UHCFPlugin;

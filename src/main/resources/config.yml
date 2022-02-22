@@ -1,6 +1,11 @@
 # Methods are: JSON or YAML
 save-method: 'json'
 
+# Should repeating messages sent close together be disregarded
+message-cooldowns:
+  enabled: true
+  time-in-ms: 5000
+
 # <>--- Advanced options ---<>
 # These settings are all advanced options
 # Do not change unless you know what you are doing
