@@ -10,6 +10,9 @@ requires-player:
 command-usage:
   - '&cUsage: /%command%'
 
+player-help-message:
+  - '&7To create a faction, type &9/faction create <name>'
+
 faction-command:
   no-permission:
     - '&cYou must be a &e%role% &cto do this!'
@@ -343,5 +346,23 @@ admin-command:
     toggled:
       - '&7Viewing claims: %colour%%toggle%'
 
-interactions:
-  - '&cYou cannot %interaction% in &f%faction.name%'
+# Messages sent to the player when their action has been denied in another claim
+blocked-interactions:
+  borderlands:
+    - '&cYou cannot interact in borderlands'
+
+  admin-claim:
+    - '&cYou cannot interact in &f%faction.name%'
+
+  player-claim:
+    - '&cYou cannot interact in &f%faction.name%'
+
+  no-block-access:
+    - '&cYou must be &e%role% &cto break blocks'
+
+  no-chest-access:
+    - '&cYou must be &e%role% &cto interact with chests'
+
+  no-access:
+    - '&cYou must be &e%role% &cto interact with this'
+

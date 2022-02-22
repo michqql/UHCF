@@ -71,7 +71,7 @@ public final class UHCFPlugin extends JavaPlugin {
         // Listeners
         new CustomEventListener(this);
         new MovementListener(this, configFile, factionsManager, claimsManager);
-        new BlockListener(this, messageHandler, factionsManager, claimsManager, claimOutlineManager);
+        new BlockListener(this, configFile, messageHandler, factionsManager, claimsManager, claimOutlineManager);
         new DamageListener(this, factionsManager, playerManager);
     }
 

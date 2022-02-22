@@ -68,7 +68,7 @@ public class FactionCommandManager extends CommandManager {
             if(faction != null) {
                 new ViewFactionInfoGui(guiHandler, player, faction).openGui();
             } else {
-                // TODO send faction help command
+                messageHandler.sendList(player, "player-help-message");
             }
             return;
         }

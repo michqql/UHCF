@@ -50,9 +50,8 @@ public class Members implements IReadWrite {
         data.set("leader", leader.toString());
 
         IData memberData = data.createSection("members");
-        members.forEach((memberUuid, factionRole) -> {
-            memberData.set(memberUuid.toString(), factionRole.toString());
-        });
+        members.forEach((memberUuid, factionRole) ->
+                memberData.set(memberUuid.toString(), factionRole.name()));
     }
 
     public UUID getLeader() {

@@ -27,6 +27,12 @@ player-claims:
 
 claimable-world: 'world'
 
+# The number of blocks from 0,0 at which the player enters borderlands
+# In borderlands, players cannot claim. (Set to -1 to disable)
+# E.g. distance of 1000 would create a claimable 2000x2000 map
+borderlands-distance: 1000
+physical-border-distance: 1500 # Must be greater than borderlands distance
+
 chunk-change-message:
   fade-in-ticks: 5
   stay-ticks: 10
