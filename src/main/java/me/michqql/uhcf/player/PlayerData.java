@@ -12,7 +12,7 @@ public class PlayerData implements IReadWrite {
     final Player player;
 
     // Statistics
-    private int kills, deaths;
+    private int kills = 0, deaths = 0;
 
     PlayerData(Player player) {
         this.uuid = player.getUniqueId();

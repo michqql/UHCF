@@ -14,6 +14,7 @@ import me.michqql.uhcf.faction.FactionsManager;
 import me.michqql.uhcf.listeners.BlockListener;
 import me.michqql.uhcf.listeners.DamageListener;
 import me.michqql.uhcf.listeners.MovementListener;
+import me.michqql.uhcf.listeners.custom.CustomEventListener;
 import me.michqql.uhcf.player.PlayerManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -40,15 +41,15 @@ public final class UHCFPlugin extends JavaPlugin {
         instance = this;
 
         final CommentFile langFile = new CommentFile(this, "", "lang");
-        final CommentFile config = new CommentFile(this, "", "config");
+        final CommentFile configFile = new CommentFile(this, "", "config");
 
         final GuiHandler guiHandler = new GuiHandler(this);
         final MessageHandler messageHandler = new MessageHandler(langFile.getConfig());
 
         // High important managers
-        this.factionsManager = new FactionsManager(this, config);
-        this.claimsManager = new ClaimsManager(config);
-        this.playerManager = new PlayerManager(this, config); // registers as event listener in constructor
+        this.factionsManager = new FactionsManager(this, configFile);
+        this.claimsManager = new ClaimsManager(configFile);
+        this.playerManager = new PlayerManager(this, configFile); // registers as event listener in constructor
 
         // Load saved data
         factionsManager.load();
@@ -61,14 +62,15 @@ public final class UHCFPlugin extends JavaPlugin {
         Objects.requireNonNull(getCommand("faction"))
                 .setExecutor(new FactionCommandManager(
                         this, messageHandler, guiHandler, factionsManager,
-                        claimsManager, claimOutlineManager, config.getConfig()
+                        claimsManager, claimOutlineManager, configFile.getConfig()
                 ));
 
         Objects.requireNonNull(getCommand("admin"))
                 .setExecutor(new AdminCommandManager(this, messageHandler, factionsManager, claimsManager));
 
         // Listeners
-        new MovementListener(this);
+        new CustomEventListener(this);
+        new MovementListener(this, configFile, factionsManager, claimsManager);
         new BlockListener(this, messageHandler, factionsManager, claimsManager, claimOutlineManager);
         new DamageListener(this, factionsManager, playerManager);
     }
@@ -90,5 +92,13 @@ public final class UHCFPlugin extends JavaPlugin {
 
     public ClaimsManager getClaimsManager() {
         return claimsManager;
+    }
+
+    public PlayerManager getPlayerManager() {
+        return playerManager;
+    }
+
+    public ClaimOutlineManager getClaimOutlineManager() {
+        return claimOutlineManager;
     }
 }

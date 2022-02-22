@@ -43,7 +43,7 @@ public class WhoSubCommand extends SubCommand {
 
             String realName = OfflineUUID.getName(uuid);
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
-            if(!offlinePlayer.hasPlayedBefore()) {
+            if(!offlinePlayer.isOnline() && !offlinePlayer.hasPlayedBefore()) {
                 messageHandler.sendList(sender, "faction-command.info.could-not-find-player",
                         Placeholder.of("player", realName));
                 return;
@@ -82,8 +82,6 @@ public class WhoSubCommand extends SubCommand {
         List<OfflinePlayer> players = members.getPlayers();
         for(int i = 0; i < players.size(); i++) {
             OfflinePlayer player = players.get(i);
-            if(!player.hasPlayedBefore())
-                continue;
 
             if(player.isOnline())
                 builder.append("&a");

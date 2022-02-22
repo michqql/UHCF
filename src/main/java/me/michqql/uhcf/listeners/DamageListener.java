@@ -34,6 +34,9 @@ public class DamageListener extends AbstractListener {
             return;
 
         final PlayerFaction faction = factionsManager.getPlayerFactionByPlayer(defender.getUniqueId());
+        if(faction == null)
+            return;
+
         final Members members = faction.getMembers();
 
         // Check #1: if the damager is a player, and they are in same faction

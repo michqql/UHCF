@@ -114,8 +114,6 @@ public class InfoSubCommand extends SubCommand {
         List<OfflinePlayer> players = members.getPlayers();
         for(int i = 0; i < players.size(); i++) {
             OfflinePlayer player = players.get(i);
-            if(!player.hasPlayedBefore())
-                continue;
 
             if(player.isOnline())
                 builder.append("&a");
