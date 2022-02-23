@@ -14,11 +14,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class InvitePlayerSubCommand extends SubCommand {
+public class LeaveSubCommand extends SubCommand {
 
     private final FactionsManager factionsManager;
 
-    public InvitePlayerSubCommand(Plugin bukkitPlugin, MessageHandler messageHandler, FactionsManager factionsManager) {
+    public LeaveSubCommand(Plugin bukkitPlugin, MessageHandler messageHandler, FactionsManager factionsManager) {
         super(bukkitPlugin, messageHandler);
         this.factionsManager = factionsManager;
     }
@@ -45,12 +45,13 @@ public class InvitePlayerSubCommand extends SubCommand {
         // Check if player owns faction
         // (if so, they must promote another player first)
         Members members = faction.getMembers();
-        if(members.isOwner(uuid)) {
+        if(members.isLeader(uuid)) {
             messageHandler.sendList(player, "faction-command.leave.player-is-leader");
             return;
         }
 
         // Leave faction
+        factionsManager.setPlayerFaction(uuid, null);
         members.removeMember(uuid);
 
         // Send message to player

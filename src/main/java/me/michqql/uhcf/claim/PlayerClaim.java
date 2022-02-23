@@ -1,9 +1,8 @@
 package me.michqql.uhcf.claim;
 
+import me.michqql.uhcf.claim.traversal.ClaimTraversal;
 import me.michqql.uhcf.faction.PlayerFaction;
 import org.bukkit.Chunk;
-
-import java.util.HashSet;
 
 public class PlayerClaim extends Claim {
 
@@ -13,25 +12,12 @@ public class PlayerClaim extends Claim {
     private long decayTimestamp;
 
     public PlayerClaim(PlayerFaction owner) {
-        super(new HashSet<>());
         this.owner = owner;
     }
 
-    public PlayerClaim(PlayerFaction owner, HashSet<Chunk> chunks) {
-        super(chunks);
-        this.owner = owner;
-    }
-
+    @Override
     public PlayerFaction getOwningFaction() {
         return owner;
-    }
-
-    public Chunk getChunkByCoordinates(int x, int z) {
-        for(Chunk c : chunks) {
-            if(c.getX() == x && c.getZ() == z)
-                return c;
-        }
-        return null;
     }
 
     public double getUpkeep() {
@@ -57,5 +43,28 @@ public class PlayerClaim extends Claim {
 
     public long getDecayTimestamp() {
         return decayTimestamp;
+    }
+
+    /**
+     * Checks whether unclaiming this chunk will split
+     * the claim into two disconnected areas
+     *
+     * @param chunk to unclaim
+     * @return {@code false} if this action will split claim into two
+     */
+    public boolean canUnclaim(Chunk chunk) {
+        if(chunks.size() <= 2)
+            return true;
+
+        ClaimTraversal traversal = new ClaimTraversal(this);
+        return traversal.canUnclaim(chunk);
+    }
+
+    public void claim(Chunk chunk) {
+        chunks.add(chunk);
+    }
+
+    public void unclaim(Chunk chunk) {
+        chunks.remove(chunk);
     }
 }

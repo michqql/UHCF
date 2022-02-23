@@ -1,0 +1,47 @@
+# Methods are: JSON or YAML
+save-method: 'json'
+
+# Should repeating messages sent close together be disregarded
+message-cooldowns:
+  enabled: true
+  time-in-ms: 5000
+
+# <>--- Factions ---<>
+# Faction id (advanced setting)
+faction-id-regex-pattern: '[a-zA-Z0-9]{3,10}'
+
+# Maximum player sizes (advanced setting)
+# The size is calculated by: size = (fS * fM) + (aS * aM) + (tS * tM)
+max-faction-size: 18
+max-distributed-size: 20.0 # the maximum combined size of faction members, ally members and truce members
+multipliers:
+  truce: 1.0
+  ally: 1.5
+  faction: 2.0
+
+# <>--- Claims ---<>
+player-claims:
+  default: 3
+  increase_per_member: 1
+  maximum: 9
+
+claimable-world: 'world'
+
+# The number of chunks (16 blocks) from 0,0 at which the player enters borderlands
+# In borderlands, players cannot claim. (Set to -1 to disable)
+# E.g. distance of 32 would create a claimable 1024x1024 map (32 chunks * 16 blocks * 2)
+borderlands-distance: 32
+physical-border-distance: 40 # Must be greater than borderlands distance (in chunks)
+borderlands-name: '&eBorderlands'
+wilderness-name: '&2Wilderness'
+
+chunk-change-message:
+  fade-in-ticks: 5
+  stay-ticks: 10
+  fade-out-ticks: 5
+  top-text: ''
+  bottom-text: '%rel.colour%%faction.name%'
+  wilderness-name: '&2Wilderness'
+
+upkeep:
+  scale: 100

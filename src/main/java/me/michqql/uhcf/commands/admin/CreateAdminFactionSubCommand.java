@@ -89,7 +89,7 @@ public class CreateAdminFactionSubCommand extends SubCommand {
         }
 
         // Create faction
-        PlayerFaction created = new PlayerFaction(name.toLowerCase(Locale.ROOT), null);
+        PlayerFaction created = new PlayerFaction(name.toLowerCase(Locale.ROOT), ((Player) sender).getUniqueId());
         factionsManager.createPlayerFaction(created);
         created.setDisplayName(name);
 

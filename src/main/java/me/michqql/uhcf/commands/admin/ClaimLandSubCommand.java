@@ -44,23 +44,16 @@ public class ClaimLandSubCommand extends SubCommand {
         // Check player is temporary faction member
         Faction faction = factionsManager.getTemporaryFactionByPlayer(player.getUniqueId());
         if(faction == null) {
-            messageHandler.sendList(player, "admin-command.claim.no-temp-faction");
+            messageHandler.sendList(player, "admin-command.no-temporary-faction");
             return;
         }
 
         Chunk location = player.getLocation().getChunk();
 
         // Check whether land is claimed or not
-        Claim claim = claimsManager.getClaimFromChunk(location);
+        Claim claim = claimsManager.getClaimByChunk(location);
         if(claim != null) {
-            String displayName = "unknown";
-            if(claim instanceof AdminClaim ac)
-                displayName = ac.getAdminFactionOwner().getDisplayName();
-            else if(claim instanceof PlayerClaim pc)
-                displayName = pc.getOwningFaction().getDisplayName();
-
-            messageHandler.sendList(player, "admin-command.claim.chunk-already-claimed",
-                    Placeholder.of("faction", displayName));
+            sendAlreadyClaimedMessage(player, claim);
             return;
         }
 
@@ -78,8 +71,18 @@ public class ClaimLandSubCommand extends SubCommand {
             }
         }
         else if(faction instanceof PlayerFaction pf) {
-            Claim current = claimsManager.claimPlayer3x3(pf, location);
+            if(!claimsManager.isWorldClaimable(location.getWorld())) {
+                messageHandler.sendList(player, "admin-command.claim.cannot-claim", new HashMap<>(){{
+                    put("reason", "This world " + location.getWorld().getName() + " cannot be claimed in");
+                    put("faction.type", "player");
+                    put("faction", faction.getDisplayName());
+                    put("faction.name", faction.getDisplayName());
+                    put("faction.id", faction.getUniqueIdentifier());
+                }});
+                return;
+            }
 
+            Claim current = claimsManager.claimPlayerChunk(pf, location);
             if(current == null) {
                 messageHandler.sendList(player, "admin-command.claim.chunk-claimed", new HashMap<>() {{
                     put("type", "player");
@@ -99,7 +102,7 @@ public class ClaimLandSubCommand extends SubCommand {
             displayName = pc.getOwningFaction().getDisplayName();
 
         messageHandler.sendList(player, "admin-command.claim.chunk-already-claimed",
-                Placeholder.of("faction", displayName));
+                Placeholder.of("faction.name", displayName));
     }
 
     @Override

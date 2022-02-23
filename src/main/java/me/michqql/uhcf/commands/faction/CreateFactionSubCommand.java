@@ -9,7 +9,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -49,6 +48,7 @@ public class CreateFactionSubCommand extends SubCommand {
         PlayerFaction current = factionsManager.getPlayerFactionByPlayer(player.getUniqueId());
         if(current != null) {
             messageHandler.sendList(player, "faction-command.create.already-in-faction");
+            return;
         }
 
         // Check id is valid
@@ -68,10 +68,11 @@ public class CreateFactionSubCommand extends SubCommand {
         // Create faction
         PlayerFaction created = new PlayerFaction(name.toLowerCase(Locale.ROOT), player.getUniqueId());
         factionsManager.createPlayerFaction(created);
+        factionsManager.setPlayerFaction(player.getUniqueId(), created);
 
         // Set leader to player
         created.setDisplayName(name);
-        created.getMembers().setOwner(player.getUniqueId());
+        created.getMembers().setLeader(player.getUniqueId());
 
         // Send messages
         messageHandler.sendList(player, "faction-command.create.faction-created",

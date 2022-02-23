@@ -1,16 +1,13 @@
 package me.michqql.uhcf.claim;
 
 import me.michqql.uhcf.faction.AdminFaction;
-import org.bukkit.Chunk;
-
-import java.util.HashSet;
+import me.michqql.uhcf.faction.Faction;
 
 public class AdminClaim extends Claim {
 
     private final AdminFaction owner;
 
     public AdminClaim(AdminFaction owner) {
-        super(new HashSet<>());
         this.owner = owner;
     }
 
@@ -18,11 +15,8 @@ public class AdminClaim extends Claim {
         return owner;
     }
 
-    public void claim(Chunk chunk) {
-        chunks.add(chunk);
-    }
-
-    public void unclaim(Chunk chunk) {
-        chunks.remove(chunk);
+    @Override
+    public Faction getOwningFaction() {
+        return owner;
     }
 }
