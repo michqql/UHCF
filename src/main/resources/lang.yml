@@ -366,3 +366,7 @@ blocked-interactions:
   no-access:
     - '&cYou must be &e%role% &cto interact with this'
 
+world-event-command:
+  invalid-type:
+    - '&f%type% &cis an invalid event type'
+    - '&7Types: &e%types%'

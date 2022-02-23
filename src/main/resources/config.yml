@@ -45,3 +45,8 @@ chunk-change-message:
 
 upkeep:
   scale: 100
+
+# <>--- World Events ---<>
+# Use time formatting d, h, m, s
+# E.g. 1d 2h 3m 5s equates to 1 day, 2 hours, 3 minutes and 5 seconds between world events spawning
+time-between-events: '1h'

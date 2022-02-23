@@ -19,3 +19,9 @@ commands:
   admin:
     aliases:
       - x
+
+  worldevent:
+    aliases:
+      - worldevents
+      - event
+      - events
