@@ -5,7 +5,9 @@ import me.michqql.core.gui.GuiHandler;
 import me.michqql.core.item.ItemBuilder;
 import me.michqql.core.util.OfflineUUID;
 import me.michqql.uhcf.faction.PlayerFaction;
+import me.michqql.uhcf.faction.attributes.Members;
 import me.michqql.uhcf.faction.roles.FactionRole;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -48,8 +50,19 @@ public class ViewFactionInfoGui extends Gui {
                 .displayName("&3&l" + faction.getDisplayName()).lore(lore).getItem());
 
         // Players
-        LinkedHashMap<OfflinePlayer, FactionRole> players = faction.getMembers().getPlayersSortedByRole();
+        Members members = faction.getMembers();
+        LinkedHashMap<OfflinePlayer, FactionRole> players = members.getPlayersSortedByRole();
         int index = 0;
+
+        // Leader
+        OfflinePlayer leader = Bukkit.getOfflinePlayer(members.getLeader());
+        this.inventory.setItem(PLAYER_SLOTS[index], new ItemBuilder(Material.SKELETON_SKULL)
+                .displayName("&c" + leader.getName()).lore(
+                        "&eRole &f" + FactionRole.LEADER.getName()
+                ).getItem());
+        index++;
+
+        // Members
         for (Map.Entry<OfflinePlayer, FactionRole> entry : players.entrySet()) {
             this.inventory.setItem(PLAYER_SLOTS[index], new ItemBuilder(Material.SKELETON_SKULL)
                     .displayName("&c" + entry.getKey().getName()).lore(

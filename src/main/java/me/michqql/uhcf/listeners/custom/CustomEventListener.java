@@ -2,7 +2,7 @@ package me.michqql.uhcf.listeners.custom;
 
 import me.michqql.core.util.AbstractListener;
 import me.michqql.uhcf.UHCFPlugin;
-import me.michqql.uhcf.events.PlayerChunkChangeEvent;
+import me.michqql.uhcf.listeners.events.PlayerChunkChangeEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;

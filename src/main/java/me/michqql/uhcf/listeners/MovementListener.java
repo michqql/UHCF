@@ -7,7 +7,7 @@ import me.michqql.uhcf.UHCFPlugin;
 import me.michqql.uhcf.claim.Claim;
 import me.michqql.uhcf.claim.ClaimsManager;
 import me.michqql.uhcf.claim.view.ClaimViewingHandler;
-import me.michqql.uhcf.events.PlayerChunkChangeEvent;
+import me.michqql.uhcf.listeners.events.PlayerChunkChangeEvent;
 import me.michqql.uhcf.faction.AdminFaction;
 import me.michqql.uhcf.faction.Faction;
 import me.michqql.uhcf.faction.FactionsManager;
@@ -110,6 +110,7 @@ public class MovementListener extends AbstractListener {
     }
 
     private void sendTitle(Player player) {
+        boolean isInBorderlands = claimsManager.isInBorderlands(player.getLocation().getChunk());
         HashMap<String, String> placeholders = new HashMap<>(){{
             put("relation.colour", "");
             put("relation.color", "");
@@ -117,9 +118,9 @@ public class MovementListener extends AbstractListener {
             put("rel.colour", "");
             put("rel.color", "");
             put("rel.col", "");
-            put("faction", wildernessName);
-            put("faction.name", wildernessName);
-            put("faction.id", wildernessName);
+            put("faction", isInBorderlands ? borderlandsName : wildernessName);
+            put("faction.name", isInBorderlands ? borderlandsName : wildernessName);
+            put("faction.id", isInBorderlands ? borderlandsName : wildernessName);
         }};
 
         player.sendTitle(

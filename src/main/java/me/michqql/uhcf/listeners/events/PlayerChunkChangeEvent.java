@@ -1,4 +1,4 @@
-package me.michqql.uhcf.events;
+package me.michqql.uhcf.listeners.events;
 
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
