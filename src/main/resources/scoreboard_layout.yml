@@ -1,0 +1,50 @@
+# The top bar/title
+title:
+  # Whether to use the static or dynamic title
+  # Static text will not update, however dynamic will update the text at a given interval
+  type: 'static'
+  static: '&9Factions'
+  dynamic:
+    interval: 5 # In ticks
+    lines:
+      - '&9Factions'
+      - '&bF&9actions'
+      - '&bFa&9ctions'
+      - '&bFac&9tions'
+      - '&bFact&9ions'
+      - '&bFacti&9ons'
+      - '&bFactio&9ns'
+      - '&bFaction&9s'
+      - '&bFactions'
+      - '&9F&bactions'
+      - '&9Fa&bctions'
+      - '&9Fac&btions'
+      - '&9Fact&bions'
+      - '&9Facti&bons'
+      - '&9Factio&bns'
+      - '&9Faction&bs'
+      - '&9Factions'
+
+body:
+  faction:
+    title: '&f> &9Your Faction'
+    text: ' %rel.colour%%faction.name%'
+
+  # Only appears if player is in a temporary admin faction
+  admin-faction:
+    title: '&f> &9Temporary Faction'
+    text: ' %faction.type.colour%%faction.name% &7(%faction.type%)'
+
+  territory:
+    title: '&f> &9Territory'
+    text: ' %rel.colour%%faction.name%'
+
+  balance:
+    title: '&f> &9Balance'
+    text: ' &2$%balance%'
+
+  stats:
+    title: '&f> &9Kills/Deaths'
+    text: ' &a%kills%&7/&c%deaths%'
+
+  footer: '&3store.factions.com'

@@ -16,6 +16,7 @@ import me.michqql.uhcf.listeners.DamageListener;
 import me.michqql.uhcf.listeners.MovementListener;
 import me.michqql.uhcf.listeners.custom.CustomEventListener;
 import me.michqql.uhcf.player.PlayerManager;
+import me.michqql.uhcf.util.scoreboard.ScoreboardHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
@@ -57,6 +58,7 @@ public final class UHCFPlugin extends JavaPlugin {
 
         // Other, less important managers
         this.claimOutlineManager = new ClaimOutlineManager(this);
+        new ScoreboardHandler(this, configFile, factionsManager, claimsManager, playerManager);
 
         // Register Commands & Listeners
         Objects.requireNonNull(getCommand("faction"))

@@ -24,7 +24,7 @@ public class MovementListener extends AbstractListener {
 
     // Config
     private final int fadeInTicks, stayTicks, fadeOutTicks;
-    private final String topText, subText, wildernessName;
+    private final String topText, subText, wildernessName, borderlandsName;
 
     private final FactionsManager factionsManager;
     private final ClaimsManager claimsManager;
@@ -52,7 +52,8 @@ public class MovementListener extends AbstractListener {
             bottomText = " ";
         this.subText = bottomText;
 
-        this.wildernessName = f.getString("chunk-change-message.wilderness-name", "&2Wilderness");
+        this.wildernessName = f.getString("wilderness-name", "&2Wilderness");
+        this.borderlandsName = f.getString("borderlands-name", "&eBorderlands");
     }
 
     @EventHandler

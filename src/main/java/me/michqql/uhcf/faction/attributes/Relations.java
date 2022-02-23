@@ -3,9 +3,14 @@ package me.michqql.uhcf.faction.attributes;
 import me.michqql.core.data.IData;
 import me.michqql.uhcf.UHCFPlugin;
 import me.michqql.core.data.IReadWrite;
+import me.michqql.uhcf.claim.Claim;
+import me.michqql.uhcf.faction.AdminFaction;
+import me.michqql.uhcf.faction.Faction;
 import me.michqql.uhcf.faction.FactionsManager;
 import me.michqql.uhcf.faction.PlayerFaction;
+import me.michqql.uhcf.faction.roles.FactionRole;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -80,5 +85,31 @@ public class Relations implements IReadWrite {
             relations.remove(other);
         else
             relations.put(other, relation);
+    }
+
+    public static FactionRole getRelation(FactionsManager factionsManager, Player player, Faction faction) {
+        PlayerFaction playerFaction = factionsManager.getPlayerFactionByPlayer(player.getUniqueId());
+
+        if(faction instanceof AdminFaction)
+            return FactionRole.NONE;
+
+        if(faction == null)
+            return FactionRole.NONE;
+
+        // Player is in that faction
+        if (faction.equals(playerFaction))
+            return FactionRole.MEMBER;
+
+        // Is player in ally or truce faction
+        PlayerFaction playerOwner = (PlayerFaction) faction;
+        Relations relations = playerOwner.getRelations();
+
+        if(relations.isAlly(playerFaction))
+            return FactionRole.ALLY;
+
+        if(relations.isTruce(playerFaction))
+            return FactionRole.TRUCE;
+
+        return FactionRole.NONE;
     }
 }

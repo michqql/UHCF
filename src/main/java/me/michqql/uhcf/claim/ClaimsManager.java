@@ -15,6 +15,8 @@ public class ClaimsManager {
     // Config
     private final CommentFile factionsConfigFile;
     private World claimableWorld;
+    private int chunksToBorderlands;
+    private int chunksToBorder;
 
     private final HashMap<Chunk, Claim> chunkToClaimMap = new HashMap<>();
 
@@ -37,6 +39,9 @@ public class ClaimsManager {
                 this.claimableWorld = world;
             }
         }
+
+        this.chunksToBorderlands = f.getInt("borderlands-distance");
+        this.chunksToBorder = f.getInt("physical-border-distance");
     }
 
     // Admin claims bypass world restrictions
@@ -129,5 +134,12 @@ public class ClaimsManager {
         }
 
         return claims;
+    }
+
+    public boolean isInBorderlands(Chunk chunk) {
+        int x = Math.abs(chunk.getX());
+        int z = Math.abs(chunk.getZ());
+
+        return x >= chunksToBorderlands || z >= chunksToBorderlands;
     }
 }
