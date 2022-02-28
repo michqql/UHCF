@@ -6,6 +6,7 @@ import me.michqql.core.util.MessageHandler;
 import me.michqql.uhcf.UHCFPlugin;
 import me.michqql.uhcf.claim.ClaimsManager;
 import me.michqql.uhcf.faction.FactionsManager;
+import me.michqql.uhcf.raiding.RaidManager;
 import org.bukkit.command.CommandSender;
 
 import java.util.Arrays;
@@ -15,12 +16,14 @@ public class AdminCommandManager extends CommandManager {
 
     private final FactionsManager factionsManager;
     private final ClaimsManager claimsManager;
+    private final RaidManager raidManager;
 
     public AdminCommandManager(UHCFPlugin plugin, MessageHandler messageHandler,
-                               FactionsManager factionsManager, ClaimsManager claimsManager) {
+                               FactionsManager factionsManager, ClaimsManager claimsManager, RaidManager raidManager) {
         super(plugin, messageHandler);
         this.factionsManager = factionsManager;
         this.claimsManager = claimsManager;
+        this.raidManager = raidManager;
     }
 
     @Override
@@ -30,7 +33,9 @@ public class AdminCommandManager extends CommandManager {
                 new ClaimLandSubCommand(bukkitPlugin, messageHandler, factionsManager, claimsManager),
                 new UnclaimLandSubCommand(bukkitPlugin, messageHandler, factionsManager, claimsManager),
                 new TempJoinSubCommand(bukkitPlugin, messageHandler, factionsManager),
-                new ViewClaimSubCommand(bukkitPlugin, messageHandler, factionsManager, claimsManager)
+                new ViewClaimSubCommand(bukkitPlugin, messageHandler, factionsManager, claimsManager),
+                new WarpointSubCommand(bukkitPlugin, messageHandler, factionsManager, raidManager),
+                new RaidSubCommand(bukkitPlugin, messageHandler, factionsManager, raidManager)
         ));
     }
 

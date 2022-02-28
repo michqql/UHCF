@@ -9,6 +9,8 @@ import me.michqql.uhcf.faction.PlayerFaction;
 import me.michqql.uhcf.faction.attributes.Members;
 import me.michqql.uhcf.faction.roles.FactionPermission;
 import me.michqql.uhcf.faction.roles.FactionRole;
+import me.michqql.uhcf.listeners.events.infoupdate.FactionMemberUpdateEvent;
+import me.michqql.uhcf.util.EventUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -87,6 +89,15 @@ public class DemoteSubCommand extends SubCommand {
             }
 
             members.setFactionRole(uuid, demotion);
+
+            // Call event
+            EventUtil.call(new FactionMemberUpdateEvent(
+                    playerFaction,
+                    player,
+                    uuid,
+                    role,
+                    demotion
+            ));
 
             messageHandler.sendList(player, "faction-command.demote.demoted.you",
                     Placeholder.of("player", realName, "role", demotion.toString()));

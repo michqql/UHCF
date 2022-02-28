@@ -8,6 +8,8 @@ import me.michqql.uhcf.faction.PlayerFaction;
 import me.michqql.uhcf.faction.attributes.Members;
 import me.michqql.uhcf.faction.roles.FactionPermission;
 import me.michqql.uhcf.faction.roles.FactionRole;
+import me.michqql.uhcf.listeners.events.infoupdate.FactionMemberUpdateEvent;
+import me.michqql.uhcf.util.EventUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -81,6 +83,15 @@ public class InviteSubCommand extends SubCommand {
         }
 
         factionsManager.invitePlayer(online.getUniqueId(), playerFaction);
+
+        // Call member update event
+        EventUtil.call(new FactionMemberUpdateEvent(
+                playerFaction,
+                player,
+                online.getUniqueId(),
+                FactionRole.NONE,
+                FactionRole.NONE
+        ));
 
         List<Player> onlinePlayers = playerFaction.getMembers().getOnlinePlayers();
         HashMap<String, String> placeholders = Placeholder.of("player", online.getName());

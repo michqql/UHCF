@@ -79,8 +79,8 @@
 
         <dependency>
             <groupId>me.michqql</groupId>
-            <artifactId>Core</artifactId>
-            <version>1.4</version>
+            <artifactId>core</artifactId>
+            <version>1.5</version>
         </dependency>
 
         <!-- String similarities -->

@@ -45,3 +45,18 @@ chunk-change-message:
 
 upkeep:
   scale: 100
+
+# <>--- Raiding ---<>
+# The time in milliseconds for which a raid lasts
+# 1,800,000 ms = 30 minutes
+# After this time, the raid will automatically end
+raid-duration: 1800000
+
+# The amount of positive warpoints one faction must gain
+# against another in order for a raid to begin
+warpoints-required-to-start-raid: 25
+
+# As soon as the faction reaches X warpoints against another,
+# the raid is automatically triggered
+# If false, the raiding faction must start the raid using /faction raid <name>
+automatic-raiding: true

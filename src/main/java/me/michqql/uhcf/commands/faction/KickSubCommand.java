@@ -9,6 +9,8 @@ import me.michqql.uhcf.faction.PlayerFaction;
 import me.michqql.uhcf.faction.attributes.Members;
 import me.michqql.uhcf.faction.roles.FactionPermission;
 import me.michqql.uhcf.faction.roles.FactionRole;
+import me.michqql.uhcf.listeners.events.infoupdate.FactionMemberUpdateEvent;
+import me.michqql.uhcf.util.EventUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -77,8 +79,17 @@ public class KickSubCommand extends SubCommand {
                 return;
             }
 
-            members.removeMember(uuid);
+            FactionRole previousRole = members.removeMember(uuid);
             factionsManager.setPlayerFaction(uuid, null);
+
+            // Call member update event
+            EventUtil.call(new FactionMemberUpdateEvent(
+                    playerFaction,
+                    player,
+                    uuid,
+                    previousRole,
+                    FactionRole.NONE
+            ));
 
             for(Player online : members.getOnlinePlayers()) {
                 messageHandler.sendList(online, "faction-command.kick.kicked.faction",

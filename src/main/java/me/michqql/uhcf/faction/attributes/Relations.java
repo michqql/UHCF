@@ -41,9 +41,8 @@ public class Relations implements IReadWrite {
 
     @Override
     public void write(IData data) {
-        relations.forEach((faction, relation) -> {
-            data.set(faction.getUniqueIdentifier(), relation.toString());
-        });
+        relations.forEach((faction, relation) ->
+                data.set(faction.getUniqueIdentifier(), relation.name()));
     }
 
     public boolean isFriendly(PlayerFaction other) {
@@ -87,28 +86,28 @@ public class Relations implements IReadWrite {
             relations.put(other, relation);
     }
 
-    public static FactionRole getRelation(FactionsManager factionsManager, Player player, Faction faction) {
-        PlayerFaction playerFaction = factionsManager.getPlayerFactionByPlayer(player.getUniqueId());
-
-        if(faction instanceof AdminFaction)
-            return FactionRole.NONE;
-
-        if(faction == null)
+    public static FactionRole getRelation(Player player, PlayerFaction playersFaction, Faction other) {
+        if(playersFaction == null || other == null || other instanceof AdminFaction)
             return FactionRole.NONE;
 
         // Player is in that faction
-        if (faction.equals(playerFaction))
+        if (other.equals(playersFaction))
             return FactionRole.MEMBER;
 
         // Is player in ally or truce faction
-        PlayerFaction playerOwner = (PlayerFaction) faction;
-        Relations relations = playerOwner.getRelations();
+        PlayerFaction faction = (PlayerFaction) other;
+        Relations relations = faction.getRelations();
 
-        if(relations.isAlly(playerFaction))
+        if(relations.isAlly(playersFaction))
             return FactionRole.ALLY;
 
-        if(relations.isTruce(playerFaction))
+        if(relations.isTruce(playersFaction))
             return FactionRole.TRUCE;
+
+        // Check the warpoints, if >= 20 they are an enemy
+        Warpoints warpoints = faction.getWarpoints();
+        if(Math.abs(warpoints.getWarpoints(playersFaction)) >= 20)
+            return FactionRole.ENEMY;
 
         return FactionRole.NONE;
     }

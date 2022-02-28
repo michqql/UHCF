@@ -1,12 +1,16 @@
 package me.michqql.uhcf.commands.faction;
 
 import me.michqql.core.command.SubCommand;
+import me.michqql.core.gui.GuiHandler;
 import me.michqql.core.util.MessageHandler;
 import me.michqql.core.util.OfflineUUID;
 import me.michqql.core.util.Placeholder;
 import me.michqql.uhcf.faction.FactionsManager;
 import me.michqql.uhcf.faction.PlayerFaction;
 import me.michqql.uhcf.faction.attributes.Members;
+import me.michqql.uhcf.gui.faction.ViewFactionInfoGui;
+import me.michqql.uhcf.player.PlayerData;
+import me.michqql.uhcf.player.PlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -17,11 +21,16 @@ import java.util.*;
 
 public class WhoSubCommand extends SubCommand {
 
+    private final GuiHandler guiHandler;
     private final FactionsManager factionsManager;
+    private final PlayerManager playerManager;
 
-    public WhoSubCommand(Plugin bukkitPlugin, MessageHandler messageHandler, FactionsManager factionsManager) {
+    public WhoSubCommand(Plugin bukkitPlugin, MessageHandler messageHandler, GuiHandler guiHandler,
+                         FactionsManager factionsManager, PlayerManager playerManager) {
         super(bukkitPlugin, messageHandler);
+        this.guiHandler = guiHandler;
         this.factionsManager = factionsManager;
+        this.playerManager = playerManager;
     }
 
     @Override
@@ -55,6 +64,15 @@ public class WhoSubCommand extends SubCommand {
                     put("player", offlinePlayer.getName());
                 }});
                 return;
+            }
+
+            // Check players setting
+            if(sender instanceof Player player) {
+                PlayerData data = playerManager.get(player.getUniqueId());
+                if((boolean) data.getSetting("gui", true)) {
+                    new ViewFactionInfoGui(guiHandler, player, factionsManager, faction).openGui();
+                    return;
+                }
             }
 
             Members members = faction.getMembers();

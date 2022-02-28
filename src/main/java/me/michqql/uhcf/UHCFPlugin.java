@@ -16,6 +16,7 @@ import me.michqql.uhcf.listeners.DamageListener;
 import me.michqql.uhcf.listeners.MovementListener;
 import me.michqql.uhcf.listeners.custom.CustomEventListener;
 import me.michqql.uhcf.player.PlayerManager;
+import me.michqql.uhcf.raiding.RaidManager;
 import me.michqql.uhcf.util.scoreboard.ScoreboardHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -47,10 +48,11 @@ public final class UHCFPlugin extends JavaPlugin {
         final GuiHandler guiHandler = new GuiHandler(this);
         final MessageHandler messageHandler = new MessageHandler(langFile.getConfig());
 
-        // High important managers
+        // Important managers
         this.factionsManager = new FactionsManager(this, configFile);
         this.claimsManager = new ClaimsManager(configFile);
         this.playerManager = new PlayerManager(this, configFile); // registers as event listener in constructor
+        RaidManager raidManager = new RaidManager(this, configFile);
 
         // Load saved data
         factionsManager.load();
@@ -58,23 +60,24 @@ public final class UHCFPlugin extends JavaPlugin {
 
         // Other, less important managers
         this.claimOutlineManager = new ClaimOutlineManager(this);
-        new ScoreboardHandler(this, configFile, factionsManager, claimsManager, playerManager);
+        new ScoreboardHandler(this, configFile, factionsManager, claimsManager, playerManager, raidManager);
 
         // Register Commands & Listeners
         Objects.requireNonNull(getCommand("faction"))
                 .setExecutor(new FactionCommandManager(
                         this, messageHandler, guiHandler, factionsManager,
-                        claimsManager, claimOutlineManager, configFile.getConfig()
+                        claimsManager, playerManager, raidManager, claimOutlineManager, configFile.getConfig()
                 ));
 
         Objects.requireNonNull(getCommand("admin"))
-                .setExecutor(new AdminCommandManager(this, messageHandler, factionsManager, claimsManager));
+                .setExecutor(new AdminCommandManager(this, messageHandler, factionsManager, claimsManager, raidManager));
 
         // Listeners
         new CustomEventListener(this);
         new MovementListener(this, configFile, factionsManager, claimsManager);
-        new BlockListener(this, configFile, messageHandler, factionsManager, claimsManager, claimOutlineManager);
-        new DamageListener(this, factionsManager, playerManager);
+        new BlockListener(this, configFile, messageHandler,
+                factionsManager, claimsManager, raidManager, claimOutlineManager);
+        new DamageListener(this, messageHandler, factionsManager, playerManager, raidManager);
     }
 
     @Override

@@ -9,6 +9,8 @@ import me.michqql.uhcf.faction.attributes.Members;
 import me.michqql.uhcf.faction.attributes.Relations;
 import me.michqql.uhcf.faction.roles.FactionPermission;
 import me.michqql.uhcf.faction.roles.FactionRole;
+import me.michqql.uhcf.listeners.events.infoupdate.FactionRelationUpdateEvent;
+import me.michqql.uhcf.util.EventUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -85,6 +87,11 @@ public class TruceSubCommand extends SubCommand {
         if(factionsManager.isRequestingRelation(other, faction, Relations.Relation.TRUCE)) {
             // Accept the request
             factionsManager.acceptRequest(other, faction);
+
+            // Call relation update event
+            EventUtil.call(new FactionRelationUpdateEvent(
+                    other, player, faction, Relations.Relation.NONE, Relations.Relation.TRUCE
+            ));
 
             for(Player online : members.getOnlinePlayers()) {
                 messageHandler.sendList(online, "faction-command.truce.accepted.player-faction", new HashMap<>(){{

@@ -6,6 +6,7 @@ public enum FactionPermission {
     MANAGE_MEMBERS(FactionRole.ADMIN),
     MANAGE_RELATIONS(FactionRole.ADMIN),
     MANAGE_ROLES(FactionRole.ADMIN),
+    START_RAIDS(FactionRole.ADMIN),
 
     PERSONAL_CHEST_BYPASS(FactionRole.LEADER),
     PERSONAL_CHEST_CREATE(FactionRole.ADMIN),

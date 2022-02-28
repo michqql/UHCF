@@ -1,6 +1,8 @@
 package me.michqql.uhcf.faction.load;
 
+import me.michqql.core.data.JsonData;
 import me.michqql.core.data.YamlData;
+import me.michqql.core.io.JsonFile;
 import me.michqql.core.io.YamlFile;
 import me.michqql.core.util.FileUtils;
 import me.michqql.uhcf.UHCFPlugin;
@@ -35,8 +37,22 @@ public class YamlFactionLoader extends FactionLoader {
     @Override
     public void loadPlayerSaved() {
         List<String> playerFactions = FileUtils.getFilenamesInDirectory(plugin.getDataFolder(), PLAYER_FACTIONS_DIRECTORY);
+
+        // Pre-load factions
         for(String id : playerFactions) {
-            loadPlayer(id);
+            PlayerFaction playerFaction = new PlayerFaction(id);
+            factionsManager.createPlayerFaction(playerFaction);
+        }
+
+        // Post-load faction data
+        for(PlayerFaction faction : factionsManager.getPlayerFactions()) {
+            YamlFile file = new YamlFile(plugin, PLAYER_FACTIONS_DIRECTORY, faction.getUniqueIdentifier());
+            YamlData data = new YamlData(file);
+            faction.read(data);
+
+            Members members = faction.getMembers();
+            factionsManager.setPlayerFaction(members.getLeader(), faction);
+            members.getMembers().forEach(uuid -> factionsManager.setPlayerFaction(uuid, faction));
         }
     }
 
@@ -69,8 +85,18 @@ public class YamlFactionLoader extends FactionLoader {
     @Override
     public void loadAdminSaved() {
         List<String> adminFactions = FileUtils.getFilenamesInDirectory(plugin.getDataFolder(), ADMIN_FACTIONS_DIRECTORY);
+
+        // Pre-load factions
         for(String id : adminFactions) {
-            loadAdmin(id);
+            PlayerFaction playerFaction = new PlayerFaction(id);
+            factionsManager.createPlayerFaction(playerFaction);
+        }
+
+        // Post-load faction data
+        for(AdminFaction faction : factionsManager.getAdminFactions()) {
+            YamlFile file = new YamlFile(plugin, ADMIN_FACTIONS_DIRECTORY, faction.getUniqueIdentifier());
+            YamlData data = new YamlData(file);
+            faction.read(data);
         }
     }
 

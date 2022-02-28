@@ -17,6 +17,9 @@ import me.michqql.uhcf.faction.attributes.Relations;
 import me.michqql.uhcf.faction.roles.FactionRole;
 import me.michqql.uhcf.player.PlayerData;
 import me.michqql.uhcf.player.PlayerManager;
+import me.michqql.uhcf.raiding.Raid;
+import me.michqql.uhcf.raiding.RaidList;
+import me.michqql.uhcf.raiding.RaidManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -35,6 +38,7 @@ public class ScoreboardHandler extends AbstractListener {
     private final FactionsManager factionsManager;
     private final ClaimsManager claimsManager;
     private final PlayerManager playerManager;
+    private final RaidManager raidManager;
 
     // Config
     private String wildernessName;
@@ -53,18 +57,21 @@ public class ScoreboardHandler extends AbstractListener {
     private String balanceText;
     private String statsTitle;
     private String statsText;
+    private String raidTitle;
+    private String raidText;
     private String footer;
 
     private JPerPlayerScoreboard scoreboard;
 
     public ScoreboardHandler(UHCFPlugin plugin, CommentFile config,
                              FactionsManager factionsManager, ClaimsManager claimsManager,
-                             PlayerManager playerManager) {
+                             PlayerManager playerManager, RaidManager raidManager) {
         super(plugin);
         this.plugin = plugin;
         this.factionsManager = factionsManager;
         this.claimsManager = claimsManager;
         this.playerManager = playerManager;
+        this.raidManager = raidManager;
 
         ScoreboardManager sbManager = Bukkit.getScoreboardManager();
         if(sbManager == null) {
@@ -94,6 +101,8 @@ public class ScoreboardHandler extends AbstractListener {
         this.balanceText = f.getString("body.balance.text");
         this.statsTitle = f.getString("body.stats.title");
         this.statsText = f.getString("body.stats.text");
+        this.raidTitle = f.getString("body.raid.title");
+        this.raidText = f.getString("body.raid.text");
         this.footer = f.getString("body.footer");
 
         // Title
@@ -114,10 +123,8 @@ public class ScoreboardHandler extends AbstractListener {
                 // Title
                 player -> {
                     if(dynamic) {
-                        if(counter >= titleLines.size())
-                            counter = 0;
-
-                        return titleLines.get(counter);
+                        int index = counter % titleLines.size();
+                        return titleLines.get(index);
                     } else {
                         return titleLines.get(0);
                     }
@@ -177,7 +184,7 @@ public class ScoreboardHandler extends AbstractListener {
                     Chunk chunk = player.getLocation().getChunk();
                     Claim claim = claimsManager.getClaimByChunk(chunk);
                     String territoryColour = (claim == null) ? FactionRole.NONE.getPrefix() :
-                            Relations.getRelation(factionsManager, player, claim.getOwningFaction()).getPrefix();
+                            Relations.getRelation(player, faction, claim.getOwningFaction()).getPrefix();
                     String territoryName = (claim == null ?
                             (claimsManager.isInBorderlands(chunk) ? borderlandsName : wildernessName) :
                             claim.getOwningFaction().getDisplayName());
@@ -202,22 +209,48 @@ public class ScoreboardHandler extends AbstractListener {
                     body.add(MessageHandler.replacePlaceholdersStatic(balanceText, placeholders));
 
                     // Stats
-                    body.add("    ");
-                    body.add(statsTitle);
-                    PlayerData data = playerManager.get(player.getUniqueId());
-                    double kd = data.getKDRatio();
-                    placeholders = new HashMap<>(){{
-                        put("kills", String.valueOf(data.getKills()));
-                        put("deaths", String.valueOf(data.getDeaths()));
-                        put("kd", String.valueOf(kd));
-                        put("kd.colour", kd >= 1 ? "&a" : "&c");
-                        put("kd.color", kd >= 1 ? "&a" : "&c");
-                        put("kd.col", kd >= 1 ? "&a" : "&c");
-                    }};
-                    body.add(MessageHandler.replacePlaceholdersStatic(statsText, placeholders));
+                    RaidList raids = raidManager.getRaidsByFaction(faction);
+                    raid: if(raids.getRaids() > 0) {
+                        int index = (counter / 100) % raids.raids().size();
+                        Raid raid = raids.raids().get(index);
+                        PlayerFaction other = raid.getOther(faction);
+                        if(other == null)
+                            break raid;
+
+                        long timeRemaining = raid.getTimeRemaining();
+                        long minutes = (timeRemaining / 1000) / 60;
+                        long seconds = (timeRemaining / 1000) % 60;
+
+                        String time = minutes + "m " + seconds + "s";
+
+                        placeholders = new HashMap<>() {{
+                            put("faction", other.getDisplayName());
+                            put("faction.name", other.getDisplayName());
+                            put("raid.type", raid.isRaider(faction) ? "Raiding" : "Defending");
+                            put("time", time);
+                        }};
+
+                        body.add("    ");
+                        body.add(MessageHandler.replacePlaceholdersStatic(raidTitle, placeholders));
+                        body.add(MessageHandler.replacePlaceholdersStatic(raidText, placeholders));
+                    } else {
+                        body.add("     ");
+                        body.add(statsTitle);
+                        PlayerData data = playerManager.get(player.getUniqueId());
+                        double kd = data.getKDRatio();
+                        placeholders = new HashMap<>() {{
+                            put("kills", String.valueOf(data.getKills()));
+                            put("deaths", String.valueOf(data.getDeaths()));
+                            put("kd", String.valueOf(kd));
+                            put("kd.colour", kd >= 1 ? "&a" : "&c");
+                            put("kd.color", kd >= 1 ? "&a" : "&c");
+                            put("kd.col", kd >= 1 ? "&a" : "&c");
+                        }};
+                        body.add(MessageHandler.replacePlaceholdersStatic(statsText, placeholders));
+                    }
 
                     // Footer
-                    body.add("     ");
+                    body.add("      ");
                     if(!footer.isEmpty())
                         body.add(footer);
 
@@ -229,6 +262,9 @@ public class ScoreboardHandler extends AbstractListener {
         Bukkit.getScheduler().runTaskTimer(plugin, () -> {
             scoreboard.updateScoreboard();
             counter++;
+
+            if(counter > 128)
+                counter = 0;
         }, 20L, period);
     }
 

@@ -35,8 +35,22 @@ public class JsonFactionLoader extends FactionLoader {
     @Override
     public void loadPlayerSaved() {
         List<String> playerFactions = FileUtils.getFilenamesInDirectory(plugin.getDataFolder(), PLAYER_FACTIONS_DIRECTORY);
+
+        // Pre-load factions
         for(String id : playerFactions) {
-            loadPlayer(id);
+            PlayerFaction playerFaction = new PlayerFaction(id);
+            factionsManager.createPlayerFaction(playerFaction);
+        }
+
+        // Post-load faction data
+        for(PlayerFaction faction : factionsManager.getPlayerFactions()) {
+            JsonFile file = new JsonFile(plugin, PLAYER_FACTIONS_DIRECTORY, faction.getUniqueIdentifier());
+            JsonData data = new JsonData(file);
+            faction.read(data);
+
+            Members members = faction.getMembers();
+            factionsManager.setPlayerFaction(members.getLeader(), faction);
+            members.getMembers().forEach(uuid -> factionsManager.setPlayerFaction(uuid, faction));
         }
     }
 
@@ -69,8 +83,18 @@ public class JsonFactionLoader extends FactionLoader {
     @Override
     public void loadAdminSaved() {
         List<String> adminFactions = FileUtils.getFilenamesInDirectory(plugin.getDataFolder(), ADMIN_FACTIONS_DIRECTORY);
+
+        // Pre-load factions
         for(String id : adminFactions) {
-            loadAdmin(id);
+            AdminFaction adminFaction = new AdminFaction(id);
+            factionsManager.createAdminFaction(adminFaction);
+        }
+
+        // Post-load faction data
+        for(AdminFaction faction : factionsManager.getAdminFactions()) {
+            JsonFile file = new JsonFile(plugin, ADMIN_FACTIONS_DIRECTORY, faction.getUniqueIdentifier());
+            JsonData data = new JsonData(file);
+            faction.read(data);
         }
     }
 

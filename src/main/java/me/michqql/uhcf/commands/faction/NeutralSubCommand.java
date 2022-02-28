@@ -9,6 +9,8 @@ import me.michqql.uhcf.faction.attributes.Members;
 import me.michqql.uhcf.faction.attributes.Relations;
 import me.michqql.uhcf.faction.roles.FactionPermission;
 import me.michqql.uhcf.faction.roles.FactionRole;
+import me.michqql.uhcf.listeners.events.infoupdate.FactionRelationUpdateEvent;
+import me.michqql.uhcf.util.EventUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -75,6 +77,11 @@ public class NeutralSubCommand extends SubCommand {
 
         relations.setRelation(other, Relations.Relation.NONE);
         other.getRelations().setRelation(faction, Relations.Relation.NONE);
+
+        // Call relation update event
+        EventUtil.call(new FactionRelationUpdateEvent(
+                faction, player, other, previousType, Relations.Relation.NONE
+        ));
 
         for(Player online : members.getOnlinePlayers()) {
             messageHandler.sendList(online, "faction-command.neutral.player-faction", new HashMap<>(){{

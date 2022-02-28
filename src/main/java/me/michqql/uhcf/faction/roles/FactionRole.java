@@ -5,7 +5,7 @@ import java.util.Locale;
 public enum FactionRole {
 
     NONE(0), ENEMY(0, "&c"),
-    TRUCE(1, "&f"), ALLY(2, "&a"),
+    TRUCE(1, "&d"), ALLY(2, "&a"),
     RECRUIT(10, "&b"), MEMBER(11, "&b"),
     ADMIN(99, "#2AD2D2"), LEADER(100, "&3");
 

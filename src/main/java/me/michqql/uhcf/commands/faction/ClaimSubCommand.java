@@ -11,6 +11,8 @@ import me.michqql.uhcf.faction.FactionsManager;
 import me.michqql.uhcf.faction.PlayerFaction;
 import me.michqql.uhcf.faction.roles.FactionPermission;
 import me.michqql.uhcf.faction.roles.FactionRole;
+import me.michqql.uhcf.listeners.events.infoupdate.FactionClaimUpdateEvent;
+import me.michqql.uhcf.util.EventUtil;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -97,6 +99,10 @@ public class ClaimSubCommand extends SubCommand {
 
         // Successfully claimed
         claimOutlineManager.onClaim(claim, chunk);
+
+        // Call claim update event
+        EventUtil.call(new FactionClaimUpdateEvent(faction, player, chunk, false));
+
         HashMap<String, String> placeholders = new HashMap<>(){{
             put("player", player.getName());
             put("member", player.getName());

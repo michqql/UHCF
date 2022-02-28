@@ -45,6 +45,10 @@ body:
 
   stats:
     title: '&f> &9Kills/Deaths'
-    text: ' &a%kills%&7/&c%deaths%'
+    text: ' &a%kills%&7/&c%deaths% &7(%kd.colour%%kd%&7)'
+
+  raid:
+    title: '&f> &9%raid.type% %faction.name%'
+    text: ' &e%time% &7remaining'
 
   footer: '&3store.factions.com'

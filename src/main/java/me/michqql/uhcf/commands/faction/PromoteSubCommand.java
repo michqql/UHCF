@@ -9,6 +9,8 @@ import me.michqql.uhcf.faction.PlayerFaction;
 import me.michqql.uhcf.faction.attributes.Members;
 import me.michqql.uhcf.faction.roles.FactionPermission;
 import me.michqql.uhcf.faction.roles.FactionRole;
+import me.michqql.uhcf.listeners.events.infoupdate.FactionMemberUpdateEvent;
+import me.michqql.uhcf.util.EventUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -16,7 +18,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -83,6 +84,15 @@ public class PromoteSubCommand extends SubCommand {
 
             FactionRole promotion = role.getPromotion();
             members.setFactionRole(uuid, promotion);
+
+            // Call event
+            EventUtil.call(new FactionMemberUpdateEvent(
+                    playerFaction,
+                    player,
+                    uuid,
+                    role,
+                    promotion
+            ));
 
             messageHandler.sendList(player, "faction-command.promote.promoted.you",
                     Placeholder.of("player", realName, "role", promotion.toString()));

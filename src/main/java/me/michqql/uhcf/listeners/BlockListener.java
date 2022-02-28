@@ -17,6 +17,9 @@ import me.michqql.uhcf.faction.PlayerFaction;
 import me.michqql.uhcf.faction.roles.FactionPermission;
 import me.michqql.uhcf.faction.roles.FactionRole;
 
+import me.michqql.uhcf.raiding.Raid;
+import me.michqql.uhcf.raiding.RaidList;
+import me.michqql.uhcf.raiding.RaidManager;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Container;
@@ -38,6 +41,7 @@ public class BlockListener extends AbstractListener {
 
     private final FactionsManager factionsManager;
     private final ClaimsManager claimsManager;
+    private final RaidManager raidManager;
 
     private final ClaimOutlineManager claimOutlineManager;
 
@@ -46,11 +50,12 @@ public class BlockListener extends AbstractListener {
 
     public BlockListener(Plugin plugin, CommentFile config, MessageHandler messageHandler,
                          FactionsManager factionsManager, ClaimsManager claimsManager,
-                         ClaimOutlineManager claimOutlineManager) {
+                         RaidManager raidManager, ClaimOutlineManager claimOutlineManager) {
         super(plugin);
         this.messageHandler = messageHandler;
         this.factionsManager = factionsManager;
         this.claimsManager = claimsManager;
+        this.raidManager = raidManager;
         this.claimOutlineManager = claimOutlineManager;
 
         // Load config
@@ -134,7 +139,7 @@ public class BlockListener extends AbstractListener {
     public void onPlace(BlockPlaceEvent e) {
         final Player player = e.getPlayer();
         final UUID uuid = player.getUniqueId();
-        final Block block = e.getBlock();
+        final Block block = e.getBlockPlaced();
 
         final Claim claim = claimsManager.getClaimByChunk(block.getChunk());
 
@@ -192,6 +197,15 @@ public class BlockListener extends AbstractListener {
             e.setCancelled(true);
             messageHandler.sendList(player, "blocked-interactions.no-block-access",
                     Placeholder.of("role", FactionPermission.BLOCK_ACCESS.getDefaultRole().toString()));
+            return;
+        }
+
+        // Check if owner faction is being raided
+        RaidList raids = raidManager.getRaidsByFaction(owner);
+        if(raids.isDefending()) {
+            // If they are, stop faction members from placing blocks
+            e.setCancelled(true);
+            messageHandler.sendList(player, "blocked-interactions.raided");
         }
 
         // Player is allowed to place blocks
@@ -211,8 +225,8 @@ public class BlockListener extends AbstractListener {
         assert block != null; // Checked by e.hasBlock
         final Claim claim = claimsManager.getClaimByChunk(block.getChunk());
 
-        boolean isChest = block.getState() instanceof Container;
-        boolean isDoor = block.getBlockData() instanceof Openable;
+        final boolean isChest = block.getState() instanceof Container;
+        final boolean isDoor = block.getBlockData() instanceof Openable;
 
         // Check if player is in borderlands or wilderness
         if(claim == null) {
@@ -250,6 +264,15 @@ public class BlockListener extends AbstractListener {
 
         PlayerClaim playerClaim = (PlayerClaim) claim;
         PlayerFaction owner = playerClaim.getOwningFaction();
+
+        // Check if owner faction is being raided
+        PlayerFaction playerFaction = factionsManager.getPlayerFactionByPlayer(player.getUniqueId());
+        Raid raid = raidManager.getRaidByFactionsExact(playerFaction, owner);
+        if(raid != null) {
+            // Allow player to open containers but not doors
+            if(isChest)
+                return;
+        }
 
         // Check if player is not a member of owning faction
         if(!owner.getMembers().isInFaction(uuid)) {

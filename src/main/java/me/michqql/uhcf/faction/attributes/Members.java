@@ -83,8 +83,8 @@ public class Members implements IReadWrite {
         members.put(uuid, FactionRole.RECRUIT);
     }
 
-    public void removeMember(UUID uuid) {
-        members.remove(uuid);
+    public FactionRole removeMember(UUID uuid) {
+        return members.remove(uuid);
     }
 
     public FactionRole getFactionRole(UUID uuid) {

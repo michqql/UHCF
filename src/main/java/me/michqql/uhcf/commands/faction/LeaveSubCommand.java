@@ -6,6 +6,9 @@ import me.michqql.core.util.Placeholder;
 import me.michqql.uhcf.faction.FactionsManager;
 import me.michqql.uhcf.faction.PlayerFaction;
 import me.michqql.uhcf.faction.attributes.Members;
+import me.michqql.uhcf.faction.roles.FactionRole;
+import me.michqql.uhcf.listeners.events.infoupdate.FactionMemberUpdateEvent;
+import me.michqql.uhcf.util.EventUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -52,7 +55,16 @@ public class LeaveSubCommand extends SubCommand {
 
         // Leave faction
         factionsManager.setPlayerFaction(uuid, null);
-        members.removeMember(uuid);
+        FactionRole previous = members.removeMember(uuid);
+
+        // Call member update event
+        EventUtil.call(new FactionMemberUpdateEvent(
+                faction,
+                player,
+                player.getUniqueId(),
+                previous,
+                FactionRole.NONE
+        ));
 
         // Send message to player
         messageHandler.sendList(player, "faction-command.leave.left-player",

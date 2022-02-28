@@ -10,6 +10,8 @@ import me.michqql.uhcf.faction.FactionsManager;
 import me.michqql.uhcf.faction.PlayerFaction;
 import me.michqql.uhcf.faction.roles.FactionPermission;
 import me.michqql.uhcf.faction.roles.FactionRole;
+import me.michqql.uhcf.listeners.events.infoupdate.FactionClaimUpdateEvent;
+import me.michqql.uhcf.util.EventUtil;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -67,6 +69,9 @@ public class UnclaimSubCommand extends SubCommand {
 
         claimsManager.unclaim(chunk);
         claimOutlineManager.onUnclaim(claim, chunk);
+
+        // Call claim update event
+        EventUtil.call(new FactionClaimUpdateEvent(faction, player, chunk, true));
 
         final int maxForFaction = getMaximumClaims(faction);
         HashMap<String, String> placeholders = new HashMap<>(){{

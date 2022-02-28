@@ -4,7 +4,9 @@ import me.michqql.core.data.IData;
 import me.michqql.core.data.IReadWrite;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.UUID;
+import java.util.function.BiFunction;
 
 public class PlayerData implements IReadWrite {
 
@@ -13,6 +15,9 @@ public class PlayerData implements IReadWrite {
 
     // Statistics
     private int kills = 0, deaths = 0;
+
+    // Settings
+    private final HashMap<String, Object> settingsMap = new HashMap<>();
 
     PlayerData(Player player) {
         this.uuid = player.getUniqueId();
@@ -23,12 +28,20 @@ public class PlayerData implements IReadWrite {
     public void read(IData data) {
         this.kills = data.getInteger("kills");
         this.deaths = data.getInteger("deaths");
+
+        IData settings = data.getSection("settings");
+        for(String key : settings.getKeys()) {
+            settingsMap.put(key, settings.get(key));
+        }
     }
 
     @Override
     public void write(IData data) {
         data.set("kills", kills);
         data.set("deaths", deaths);
+
+        IData settings = data.createSection("settings");
+        settingsMap.forEach(settings::set);
     }
 
     public UUID getUniqueId() {
@@ -69,5 +82,25 @@ public class PlayerData implements IReadWrite {
             d = 1;
 
         return kills / d;
+    }
+
+    public Object getSetting(String key) {
+        return settingsMap.get(key);
+    }
+
+    public <T> Object getSetting(String key, T def) {
+        Object obj = settingsMap.get(key);
+        if(obj == null)
+            return def;
+
+        return obj;
+    }
+
+    public void setSetting(String key, Object obj) {
+        this.settingsMap.put(key, obj);
+    }
+
+    public Object computeSetting(String key, BiFunction<String, Object, Object> compute) {
+        return this.settingsMap.compute(key, compute);
     }
 }

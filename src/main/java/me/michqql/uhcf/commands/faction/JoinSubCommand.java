@@ -5,6 +5,9 @@ import me.michqql.core.util.MessageHandler;
 import me.michqql.core.util.Placeholder;
 import me.michqql.uhcf.faction.FactionsManager;
 import me.michqql.uhcf.faction.PlayerFaction;
+import me.michqql.uhcf.faction.roles.FactionRole;
+import me.michqql.uhcf.listeners.events.infoupdate.FactionMemberUpdateEvent;
+import me.michqql.uhcf.util.EventUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -68,6 +71,15 @@ public class JoinSubCommand extends SubCommand {
 
         playerFaction.getMembers().addMember(player.getUniqueId());
         factionsManager.setPlayerFaction(player.getUniqueId(), playerFaction);
+
+        // Call member update event
+        EventUtil.call(new FactionMemberUpdateEvent(
+                playerFaction,
+                player,
+                player.getUniqueId(),
+                FactionRole.NONE,
+                FactionRole.RECRUIT
+        ));
 
         messageHandler.sendList(player, "faction-command.join.joined.player", new HashMap<>(){{
             put("faction", playerFaction.getDisplayName());

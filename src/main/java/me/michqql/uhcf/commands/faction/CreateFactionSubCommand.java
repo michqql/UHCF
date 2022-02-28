@@ -5,6 +5,9 @@ import me.michqql.core.util.MessageHandler;
 import me.michqql.core.util.Placeholder;
 import me.michqql.uhcf.faction.FactionsManager;
 import me.michqql.uhcf.faction.PlayerFaction;
+import me.michqql.uhcf.listeners.events.infoupdate.FactionClaimUpdateEvent;
+import me.michqql.uhcf.listeners.events.infoupdate.FactionCreateEvent;
+import me.michqql.uhcf.util.EventUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -73,6 +76,9 @@ public class CreateFactionSubCommand extends SubCommand {
         // Set leader to player
         created.setDisplayName(name);
         created.getMembers().setLeader(player.getUniqueId());
+
+        // Call faction create event
+        EventUtil.call(new FactionCreateEvent(created, player));
 
         // Send messages
         messageHandler.sendList(player, "faction-command.create.faction-created",

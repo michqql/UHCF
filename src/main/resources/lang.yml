@@ -290,9 +290,26 @@ faction-command:
     unclaimed:
       - '&f%player% &7has unclaimed a chunk at &a<X: %x%, Z: %z%> &e(%faction.claim.size%/%faction.claim.max%)'
 
+  # /faction raid <faction>
+  raid:
+    could-not-find-faction:
+      - '&cCould not find a faction named &f%faction.name%'
+
+    faction-friendly:
+      - '&cYou cannot initiate a raid against a friendly faction'
+
+    not-enough-warpoints:
+      - '&cYou do not have enough warpoints against &f%faction.name% &cto start a raid! (%warpoints%/%required%)'
+
+    already-raiding:
+      - '&cYou and &f%faction.name% &care already in a raid'
+
 admin-command:
   no-temporary-faction:
     - '&cYou are not currently a temporary member of a faction!'
+
+  could-not-find-faction:
+    - '&cCould not find faction named &f%faction.name%'
 
   # /admin create <name> [-p]
   create:
@@ -346,6 +363,50 @@ admin-command:
     toggled:
       - '&7Viewing claims: %colour%%toggle%'
 
+  # /admin warpoint <set|view> <faction> <otherFaction>
+  warpoint:
+    view:
+      title: '&7Listing warpoints for player faction &b%faction.name%'
+      line: ' &e%count%. %positive.colour%%faction.name% (%positive.sign%%warpoints%)'
+
+    set:
+      not-a-number:
+        - '&cInput value is not a valid number! &f%value%'
+
+      in-raid:
+        - '&cWarpoints cannot be changed while &f%faction.name% &cis raiding &f%other.faction.name%'
+        - '&c%time% remaining'
+        - '&cUse &e/admin raid stop %faction.name% %other.faction.name% &cfirst to force stop the raid'
+
+      warpoint-bound:
+        - '&cWarpoints must be between raidable bounds (%min% to %max%)'
+
+      set:
+        - '&f%faction.name% &7now has %positive.colour%%positive.sign%%warpoints% &7against &f%other.faction.name%'
+
+      started-raid:
+        - '&7Due to warpoint threshold met, a raid has begun between &7%faction.name% &7and &f%other.faction.name%'
+
+  # /admin raid <start|stop> <raider faction> <defender faction>
+  raid:
+    stop:
+      not-in-raid:
+        - '&cFactions &f%faction.name% and %other.faction.name% &care not in a raid'
+
+      stopped:
+        - '&7Force ended raid between raiders &f%faction.name% &7and defenders &f%other.faction.name% with &e%time% remaining'
+
+    start:
+      in-raid:
+        - '&cFactions &f%faction.name% and %other.faction.name% &care already in a raid'
+
+      unexpected-error:
+        - '&cUnexpected error while starting raid...'
+
+      started:
+        - '&7Force started raid between raiders &f%faction.name% &7and defenders &f%other.faction.name%'
+
+
 # Messages sent to the player when their action has been denied in another claim
 blocked-interactions:
   borderlands:
@@ -366,3 +427,26 @@ blocked-interactions:
   no-access:
     - '&cYou must be &e%role% &cto interact with this'
 
+  raided:
+    - '&cYou cannot interact while you are being raided'
+
+player-death:
+  killer:
+    - '&7You killed &f%player%'
+
+  dead:
+    - '%player% &7killed you'
+
+  warpoints:
+    - '&7%your.faction.name% vs %other.faction.name% %positive.colour%%positive.sign%%warpoints%'
+
+  raidable:
+    - '&7Your faction can now raid &4%faction.name%&7, type &e/faction raid %faction.name% &7to start the raid'
+
+raid:
+  started:
+    raiders:
+      - '&7You are now raiding &4%faction.name%&7!'
+
+    defenders:
+      - '&7You are now being raided by &5%faction.name%&7!'
